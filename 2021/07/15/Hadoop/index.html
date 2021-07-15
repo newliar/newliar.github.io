@@ -290,7 +290,7 @@
   
   
   <div class="mdui-card-content mdui-typo mdui-p-x-4">
-    <h1 id="Hadoop"><a href="#Hadoop" class="headerlink" title="Hadoop"></a>Hadoop</h1><h2 id="一、Hadoop入门"><a href="#一、Hadoop入门" class="headerlink" title="一、Hadoop入门"></a>一、Hadoop入门</h2><h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><h4 id="1）Hadoop1-x、2-x、3-x的区别"><a href="#1）Hadoop1-x、2-x、3-x的区别" class="headerlink" title="1）Hadoop1.x、2.x、3.x的区别"></a>1）Hadoop1.x、2.x、3.x的区别</h4><p><img src="/.com//image-20210707093359762.png" alt="image-20210707093359762"></p>
+    <h1 id="Hadoop"><a href="#Hadoop" class="headerlink" title="Hadoop"></a>Hadoop</h1><h2 id="一、Hadoop入门"><a href="#一、Hadoop入门" class="headerlink" title="一、Hadoop入门"></a>一、Hadoop入门</h2><h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><h4 id="1）Hadoop1-x、2-x、3-x的区别"><a href="#1）Hadoop1-x、2-x、3-x的区别" class="headerlink" title="1）Hadoop1.x、2.x、3.x的区别"></a>1）Hadoop1.x、2.x、3.x的区别</h4><p><img src="/2021/07/15/Hadoop/image-20210707093359762.png" alt="image-20210707093359762"></p>
 <blockquote>
 <p>在Hadoop1.x时代，MapReduce同时处理业务逻辑和资源调度，耦合性大，在2.x时代，增加了Yarn，Yarn只负责资源调度，MapReduce负责运算。</p>
 </blockquote>
@@ -305,13 +305,13 @@
 <h4 id="3）Yarn架构"><a href="#3）Yarn架构" class="headerlink" title="3）Yarn架构"></a>3）Yarn架构</h4><blockquote>
 <p>Yet Another Resource Negotiator，另一种资源协调者， 是 Hadoop 的资源管理器</p>
 </blockquote>
-<p><img src="/.com//image-20210707094342538.png" alt="image-20210707094342538"></p>
+<p><img src="/2021/07/15/Hadoop/image-20210707094342538.png" alt="image-20210707094342538"></p>
 <h4 id="4）MapReduce架构"><a href="#4）MapReduce架构" class="headerlink" title="4）MapReduce架构"></a>4）MapReduce架构</h4><blockquote>
 <p>MapReduce 将计算过程分为两个阶段：Map 和 Reduce<br>1）Map 阶段并行处理输入数据<br>2）Reduce 阶段对 Map 结果进行汇总</p>
 </blockquote>
-<p><img src="/.com//image-20210707094444665.png" alt="image-20210707094444665"></p>
-<h4 id="5）HDFS-、YARN-、MapReduce-三者关系"><a href="#5）HDFS-、YARN-、MapReduce-三者关系" class="headerlink" title="5）HDFS 、YARN 、MapReduce  三者关系"></a>5）HDFS 、YARN 、MapReduce  三者关系</h4><p><img src="/.com//image-20210707094522781.png" alt="image-20210707094522781"></p>
-<h4 id="6）大数据技术生态体系"><a href="#6）大数据技术生态体系" class="headerlink" title="6）大数据技术生态体系"></a>6）大数据技术生态体系</h4><p><img src="/.com//image-20210707094636253.png" alt="image-20210707094636253"></p>
+<p><img src="/2021/07/15/Hadoop/image-20210707094444665.png" alt="image-20210707094444665"></p>
+<h4 id="5）HDFS-、YARN-、MapReduce-三者关系"><a href="#5）HDFS-、YARN-、MapReduce-三者关系" class="headerlink" title="5）HDFS 、YARN 、MapReduce  三者关系"></a>5）HDFS 、YARN 、MapReduce  三者关系</h4><p><img src="/2021/07/15/Hadoop/image-20210707094522781.png" alt="image-20210707094522781"></p>
+<h4 id="6）大数据技术生态体系"><a href="#6）大数据技术生态体系" class="headerlink" title="6）大数据技术生态体系"></a>6）大数据技术生态体系</h4><p><img src="/2021/07/15/Hadoop/image-20210707094636253.png" alt="image-20210707094636253"></p>
 <h3 id="2-环境准备"><a href="#2-环境准备" class="headerlink" title="2.环境准备"></a>2.环境准备</h3><h4 id="1）安装模板虚拟机"><a href="#1）安装模板虚拟机" class="headerlink" title="1）安装模板虚拟机"></a>1）安装模板虚拟机</h4><ol>
 <li><p>能Ping通外网</p>
 </li>
@@ -333,10 +333,10 @@
 <h4 id="2）克隆虚拟机"><a href="#2）克隆虚拟机" class="headerlink" title="2）克隆虚拟机"></a>2）克隆虚拟机</h4><h3 id="3-Hadoop生产集群搭建"><a href="#3-Hadoop生产集群搭建" class="headerlink" title="3.Hadoop生产集群搭建"></a>3.Hadoop生产集群搭建</h3><h3 id="4-常见错误解决方案"><a href="#4-常见错误解决方案" class="headerlink" title="4.常见错误解决方案"></a>4.常见错误解决方案</h3><h2 id="三、MapReduce"><a href="#三、MapReduce" class="headerlink" title="三、MapReduce"></a>三、MapReduce</h2><h3 id="3-MapReduce框架原理"><a href="#3-MapReduce框架原理" class="headerlink" title="3.    MapReduce框架原理"></a>3.    MapReduce框架原理</h3><h4 id="3-3-Shuffle-机制"><a href="#3-3-Shuffle-机制" class="headerlink" title="3.3    Shuffle  机制"></a>3.3    Shuffle  机制</h4><h5 id="3-3-1-Shuffle-机制"><a href="#3-3-1-Shuffle-机制" class="headerlink" title="3.3.1 Shuffle  机制"></a>3.3.1 Shuffle  机制</h5><blockquote>
 <p>Map 方法之后，Reduce 方法之前的数据处理过程称之为 Shuffle。 </p>
 </blockquote>
-<p><img src="/.com//image-20210711152750691.png" alt="image-20210711152750691"></p>
+<p><img src="/2021/07/15/Hadoop/image-20210711152750691.png" alt="image-20210711152750691"></p>
 <h5 id="3-3-2-Partition-分区"><a href="#3-3-2-Partition-分区" class="headerlink" title="3.3.2 Partition  分区"></a>3.3.2 Partition  分区</h5><p><strong>分区目的</strong>：要求将统计结果<strong>按照条件输出到不同的文件中</strong></p>
 <p><strong>默认Partitioner 分区</strong></p>
-<p><img src="/.com//image-20210711162249238.png" alt="image-20210711162249238"></p>
+<p><img src="/2021/07/15/Hadoop/image-20210711162249238.png" alt="image-20210711162249238"></p>
 <p><strong>自定义Partitioner步骤</strong></p>
 <ol>
 <li><p>自定义类继承Partitioner，重写getPartition()方法</p>
@@ -356,7 +356,7 @@
 <h5 id="3-3-4-WritableComparable-排序"><a href="#3-3-4-WritableComparable-排序" class="headerlink" title="3.3.4 WritableComparable  排序"></a>3.3.4 WritableComparable  排序</h5><blockquote>
 <p>MapTask和ReduceTask均会对数据按照key进行排序,不排序会影响reduce的执行效率👇</p>
 </blockquote>
-<p><img src="/.com//image-20210711161711491.png" alt="image-20210711161711491"></p>
+<p><img src="/2021/07/15/Hadoop/image-20210711161711491.png" alt="image-20210711161711491"></p>
 <p>默认排序是按照<strong>字典顺序排序</strong>，且实现该排序的方法是<strong>快速排序</strong>。</p>
 <p><strong>自定义排序原理</strong></p>
 <blockquote>
@@ -368,7 +368,7 @@
 <blockquote>
 <p>要求每个省份手机号输出的文件中按照总流量内部排序。</p>
 </blockquote>
-<p><img src="/.com//image-20210712100324717.png" alt="image-20210712100324717"></p>
+<p><img src="/2021/07/15/Hadoop/image-20210712100324717.png" alt="image-20210712100324717"></p>
 <p><strong>操作</strong></p>
 <ol>
 <li><p>增加自定义分区类 </p>

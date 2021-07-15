@@ -302,7 +302,7 @@
 
   
   <div class="mdui-card-content mdui-typo mdui-p-x-4">
-    <h1 id="大数据学习"><a href="#大数据学习" class="headerlink" title="大数据学习"></a>大数据学习</h1><h2 id="大数据生态体系"><a href="#大数据生态体系" class="headerlink" title="大数据生态体系"></a>大数据生态体系</h2><p><img src="/.com//image-20210705093118179.png" alt="image-20210705093118179"></p>
+    <h1 id="大数据学习"><a href="#大数据学习" class="headerlink" title="大数据学习"></a>大数据学习</h1><h2 id="大数据生态体系"><a href="#大数据生态体系" class="headerlink" title="大数据生态体系"></a>大数据生态体系</h2><p><img src="/2020/11/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AD%A6%E4%B9%A0/image-20210705093118179.png" alt="image-20210705093118179"></p>
 <p>1）Sqoop：Sqoop 是一款开源的工具，主要用于在 Hadoop、Hive 与传统的数据库（MySQL）间进行数据的传递，可以将一个关系型数据库（例如 ：MySQL，Oracle 等）中的数据导进到 Hadoop 的 HDFS 中，也可以将 HDFS 的数据导进到关系型数据库中。<br>2）Flume：Flume 是一个高可用的，高可靠的，分布式的海量日志采集、聚合和传输的系统，Flume 支持在日志系统中定制各类数据发送方，用于收集数据；<br>3）Kafka：Kafka 是一种高吞吐量的分布式发布订阅消息系统；</p>
 <p>4）Spark：Spark 是当前最流行的开源大数据内存计算框架。可以基于 Hadoop 上存储的大数据进行计算。<br>5）Flink：Flink 是当前最流行的开源大数据内存计算框架。用于实时计算的场景较多。<br>6）Oozie：Oozie 是一个管理 Hadoop 作业（job）的工作流程调度管理系统。<br>7）Hbase：HBase 是一个分布式的、面向列的开源数据库。HBase 不同于一般的关系数据库，它是一个适合于非结构化数据存储的数据库。<br>8）Hive：Hive 是基于 Hadoop 的一个数据仓库工具，可以将结构化的数据文件映射为一张数据库表，并提供简单的 SQL 查询功能，可以将 SQL 语句转换为 MapReduce 任务进行运行。其优点是学习成本低，可以通过类 SQL 语句快速实现简单的 MapReduce 统计，不必开发专门的 MapReduce 应用，十分适合数据仓库的统计分析。<br>9）ZooKeeper：它是一个针对大型分布式系统的可靠协调系统，提供的功能包括：配置维护、名字服务、分布式同步、组服务等。</p>
 <h2 id="hadoop中的目录"><a href="#hadoop中的目录" class="headerlink" title="hadoop中的目录"></a>hadoop中的目录</h2><p><strong>bin：和hdfs yarn mapred</strong></p>
@@ -316,11 +316,11 @@
 <p><strong>xsync：集群分发脚本</strong></p>
 <h2 id="SSH无密登录-02课件3-2-3"><a href="#SSH无密登录-02课件3-2-3" class="headerlink" title="SSH无密登录(02课件3.2.3)"></a>SSH无密登录(02课件3.2.3)</h2><p>1.在hadoop102用ssh-keygen -t rsa生成私钥和公钥</p>
 <p>2.通过ssh-copy-id hadoop103将公钥拷贝到目标机</p>
-<h2 id="集群配置"><a href="#集群配置" class="headerlink" title="集群配置"></a>集群配置</h2><p><img src="/.com//image-20210705213434246.png" alt="image-20210705213434246"></p>
+<h2 id="集群配置"><a href="#集群配置" class="headerlink" title="集群配置"></a>集群配置</h2><p><img src="/2020/11/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AD%A6%E4%B9%A0/image-20210705213434246.png" alt="image-20210705213434246"></p>
 <p>HDFS集群有两类节点以管理节点-工作节点模式运行，即一个namenode(管理节点)和多个datanode(工作节点)。namenode管理文件系统的命名空间。它维护着文件系统树及整棵树内的所有文件和目录。namenode也记录着每个文件中各个块所在的数据节点信息，但是它并不会永久保存块的位置信息，因为这些信息会在系统启动时根据数据节点信息重建。</p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/baidu_28997655/article/details/81707508">csdn关于HDFS之namenode与datanode</a></p>
 <p>配置完集群通过hdfs namenode -format初始化之后在hadoop-3.1.3/data/dfs/name/current/里有VERSION文件，里面可以查询到当前服务器版本号namespaceid，如下图</p>
-<p><img src="/.com//image-20210705214958785.png" alt="image-20210705214958785"></p>
+<p><img src="/2020/11/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AD%A6%E4%B9%A0/image-20210705214958785.png" alt="image-20210705214958785"></p>
 <h2 id="hadoop故障处理"><a href="#hadoop故障处理" class="headerlink" title="hadoop故障处理"></a>hadoop故障处理</h2><p>1.在hadoop102中到hadoop目录中，用sbin/stop-dfs.sh杀死hadoop中namenode、nodemanager等等进程</p>
 <p>2.在每个集群上使用rm -rf data/ logs/将data和logs全部删除</p>
 <p>3.在hadoop102中hdfs namenode -format格式化</p>
@@ -330,7 +330,7 @@
 <h3 id="1-配置虚拟机"><a href="#1-配置虚拟机" class="headerlink" title="1.配置虚拟机"></a>1.配置虚拟机</h3><p>配置IP地址、主机名称、关闭防火墙、卸载自带jdk，创建module、software 文件夹，将文件夹的所有者和所属组均为$USERNAME用户。</p>
 <h3 id="2-克隆虚拟机"><a href="#2-克隆虚拟机" class="headerlink" title="2.克隆虚拟机"></a>2.克隆虚拟机</h3><p>vm中右键虚拟机管理–》克隆–》虚拟机中的当前状态–》创建完整克隆；</p>
 <p>修改克隆虚拟机ip、主机名，配置映射hosts文件，在win10c盘路径C:\Windows\System32\drivers\etc也修改hosts内容如下图：</p>
-<p><img src="/.com//image-20210706214506377.png" alt="image-20210706214506377"></p>
+<p><img src="/2020/11/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AD%A6%E4%B9%A0/image-20210706214506377.png" alt="image-20210706214506377"></p>
 <h3 id="3-安装jdk"><a href="#3-安装jdk" class="headerlink" title="3.安装jdk"></a>3.安装jdk</h3><p>在hadoop102上安装jdk，在/etc/profile.d/my_env.sh配置环境变量</p>
 <h3 id="4-安装hadoop"><a href="#4-安装hadoop" class="headerlink" title="4.安装hadoop"></a>4.安装hadoop</h3><p>在hadoop102中安装hadoop，在/etc/profile.d/my_env.sh配置环境变量</p>
 <h3 id="5-分布式运行–环境配置及分发"><a href="#5-分布式运行–环境配置及分发" class="headerlink" title="5.分布式运行–环境配置及分发"></a>5.分布式运行–环境配置及分发</h3><p>通过scp将jdk与hadoop拷贝到集群中；</p>
@@ -338,7 +338,7 @@
 <p>在各台服务器使用source /etc/profile使环境变量生效。</p>
 <h3 id="6-ssh无密登录"><a href="#6-ssh无密登录" class="headerlink" title="6.ssh无密登录"></a>6.ssh无密登录</h3><p>在hadoop102中的/home/jiangdaxia/.ssh目录生成公钥及私钥，使用ssh-copy-id hadoop102将公钥拷贝到各个目标主机上；</p>
 <p>同理在hadoop103、hadoop104及各台主机上同样生成密钥，拷贝至各个主机。</p>
-<p><img src="/.com//image-20210706220347177.png" alt="image-20210706220347177"></p>
+<p><img src="/2020/11/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AD%A6%E4%B9%A0/image-20210706220347177.png" alt="image-20210706220347177"></p>
 <h3 id="7-集群配置"><a href="#7-集群配置" class="headerlink" title="7.集群配置"></a>7.集群配置</h3><p>在hadoop102上的$HADOOP_HOME/etc/hadoop配置core-site.xml 、hdfs-site.xml 、yarn-site.xml 、mapred-site.xml，同时pdf在配置mapred-site.xml时不全，另加</p>
 <figure class="highlight xml"><table><tr><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>yarn.app.mapreduce.am.env<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>HADOOP_MAPRED_HOME=/opt/module/hadoop-3.1.3<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>mapreduce.map.env<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>HADOOP_MAPRED_HOME=/opt/module/hadoop-3.1.3<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>mapreduce.reduce.env<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>HADOOP_MAPRED_HOME=/opt/module/hadoop-3.1.3<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br></code></pre></td></tr></table></figure>
 
@@ -353,8 +353,8 @@
 <p>在$HADOOP_HOME/etc/hadoop/yarn-site.xml配置，分发。</p>
 <p>注：每次执行wordcount需要通过hadoop fs -rm -r /output移除HDFS上已存在的输出文件。</p>
 <h3 id="10-编写-Hadoop-集群常用脚本"><a href="#10-编写-Hadoop-集群常用脚本" class="headerlink" title="10.编写 Hadoop  集群常用脚本"></a>10.编写 Hadoop  集群常用脚本</h3><p>脚本均在~/bin中;编写完成后分发。</p>
-<h2 id="hadoop常用端口号"><a href="#hadoop常用端口号" class="headerlink" title="hadoop常用端口号"></a>hadoop常用端口号</h2><p><img src="/.com//image-20210706160422156.png" alt="image-20210706160422156"></p>
-<p><img src="/.com//image-20210706160431751.png" alt="image-20210706160431751"></p>
+<h2 id="hadoop常用端口号"><a href="#hadoop常用端口号" class="headerlink" title="hadoop常用端口号"></a>hadoop常用端口号</h2><p><img src="/2020/11/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AD%A6%E4%B9%A0/image-20210706160422156.png" alt="image-20210706160422156"></p>
+<p><img src="/2020/11/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AD%A6%E4%B9%A0/image-20210706160431751.png" alt="image-20210706160431751"></p>
 
   </div>
   <!--文末结束语-->
