@@ -10,7 +10,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="/image/blog.svg">
 
 
-<meta name="keywords" content="Hadoop,大数据,MapReduce,">
+<meta name="keywords" content="大数据,Hadoop,MapReduce,">
 <meta name="description" content="MapReduce基本介绍">
 
 
@@ -258,9 +258,9 @@
         <ul class="tag">
             
             
-            <li><a href="/tags/Hadoop">Hadoop</a></li>
-            
             <li><a href="/tags/大数据">大数据</a></li>
+            
+            <li><a href="/tags/Hadoop">Hadoop</a></li>
             
             <li><a href="/tags/MapReduce">MapReduce</a></li>
             
@@ -438,7 +438,7 @@
 
 
 
-<h2 id="4-第-4-章-Hadoop-数据压缩"><a href="#4-第-4-章-Hadoop-数据压缩" class="headerlink" title="4.第 4 章 Hadoop 数据压缩"></a>4.<strong>第</strong> 4 <strong>章</strong> Hadoop <strong>数据压缩</strong></h2><blockquote>
+<h2 id="4-Hadoop-数据压缩"><a href="#4-Hadoop-数据压缩" class="headerlink" title="4.Hadoop 数据压缩"></a>4.Hadoop <strong>数据压缩</strong></h2><blockquote>
 <p><strong>压缩的好处与坏处</strong></p>
 <p>好处：减少磁盘IO、减少磁盘存储空间</p>
 <p>坏处：增加CPU的开销（需要对文件进行压缩和解压操作）</p>
@@ -451,7 +451,7 @@
 <table>
 <thead>
 <tr>
-<th>压缩格式</th>
+<th align="left">压缩格式</th>
 <th>Hadoop 自带？</th>
 <th>算法</th>
 <th>文件扩展名</th>
@@ -461,7 +461,7 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>DEFLATE</td>
+<td align="left">DEFLATE</td>
 <td>是，直接使用</td>
 <td>DEFLATE</td>
 <td>.deflate</td>
@@ -470,7 +470,7 @@
 <td></td>
 </tr>
 <tr>
-<td>Gzip</td>
+<td align="left">Gzip</td>
 <td>是，直接使用</td>
 <td>DEFLATE</td>
 <td>.gz</td>
@@ -479,7 +479,7 @@
 <td>优点：压缩率比较高；<br>缺点：不支持 Split；压缩/解压速度一般；</td>
 </tr>
 <tr>
-<td>bzip2</td>
+<td align="left">bzip2</td>
 <td>是，直接使用</td>
 <td>bzip2</td>
 <td>.bz2</td>
@@ -488,7 +488,7 @@
 <td>优点：压缩率高；支持 Split；<br>缺点：压缩/解压速度慢。</td>
 </tr>
 <tr>
-<td>LZO</td>
+<td align="left">LZO</td>
 <td>否，需要安装</td>
 <td>LZO</td>
 <td>.lzo</td>
@@ -497,7 +497,7 @@
 <td>优点：压缩/解压速度比较快；支持 Split；<br>缺点：压缩率一般；想支持切片需要额外创建索引。</td>
 </tr>
 <tr>
-<td>Snappy</td>
+<td align="left">Snappy</td>
 <td>是，直接使用</td>
 <td>Snappy</td>
 <td>.snappy</td>
@@ -537,6 +537,13 @@
     $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
 </script>
 <div class="Last-Next">
+    
+    <a href="/2021/07/16/Yarn/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>Yarn</p>
+        </div>
+    </a>
     
 
     
