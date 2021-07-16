@@ -10,7 +10,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="/image/blog.svg">
 
 
-<meta name="keywords" content="大数据,Hadoop,MapReduce,">
+<meta name="keywords" content="Hadoop,大数据,MapReduce,">
 <meta name="description" content="MapReduce基本介绍">
 
 
@@ -258,9 +258,9 @@
         <ul class="tag">
             
             
-            <li><a href="/tags/大数据">大数据</a></li>
-            
             <li><a href="/tags/Hadoop">Hadoop</a></li>
+            
+            <li><a href="/tags/大数据">大数据</a></li>
             
             <li><a href="/tags/MapReduce">MapReduce</a></li>
             
@@ -378,7 +378,17 @@
 <p><strong>数据切片：</strong>数据切片只是在逻辑上对输入进行分片，并不会在磁盘上将其切分成片进行存储。数据切片是 MapReduce 程序计算输入数据的单位，一个切片会对应启动一个 MapTask。</p>
 </blockquote>
 <p><img src="/2021/07/15/MapReduce/image-20210716155021469.png" alt="image-20210716155021469"></p>
-<h3 id="3-3-Shuffle-机制"><a href="#3-3-Shuffle-机制" class="headerlink" title="3.3    Shuffle  机制"></a>3.3    Shuffle  机制</h3><h4 id="3-3-1-Shuffle-机制"><a href="#3-3-1-Shuffle-机制" class="headerlink" title="3.3.1 Shuffle  机制"></a>3.3.1 Shuffle  机制</h4><blockquote>
+<h4 id="3-1-2-Job-提交流程源码和切片源码详解"><a href="#3-1-2-Job-提交流程源码和切片源码详解" class="headerlink" title="3.1.2 Job 提交流程源码和切片源码详解"></a><strong>3.1.2 Job</strong> <strong>提交流程源码和切片源码详解</strong></h4><ol>
+<li><p><strong>Job</strong> <strong>提交流程源码详解</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">waitForCompletion()<br><br>submit();<br><br><span class="hljs-comment">// 1 建立连接</span><br>connect();<br><span class="hljs-comment">// 1）创建提交 Job 的代理</span><br><span class="hljs-keyword">new</span> Cluster(getConfiguration());<br><span class="hljs-comment">// （1）判断是本地运行环境还是 yarn 集群运行环境</span><br>initialize(jobTrackAddr, conf); <br><br><span class="hljs-comment">// 2 提交 job</span><br>submitter.submitJobInternal(Job.<span class="hljs-keyword">this</span>, cluster)<br><br><span class="hljs-comment">// 1）创建给集群提交数据的 Stag 路径</span><br>Path jobStagingArea = JobSubmissionFiles.getStagingDir(cluster, conf);<br><br><span class="hljs-comment">// 2）获取 jobid ，并创建 Job 路径</span><br>JobID jobId = submitClient.getNewJobID();<br><br><span class="hljs-comment">// 3）拷贝 jar 包到集群</span><br>copyAndConfigureFiles(job, submitJobDir);<br>rUploader.uploadFiles(job, jobSubmitDir);<br><br><span class="hljs-comment">// 4）计算切片，生成切片规划文件</span><br>writeSplits(job, submitJobDir);<br>maps = writeNewSplits(job, jobSubmitDir);<br>input.getSplits(job);<br><br><span class="hljs-comment">// 5）向 Stag 路径写 XML 配置文件</span><br>writeConf(conf, submitJobFile);<br>conf.writeXml(out);<br><br><span class="hljs-comment">// 6）提交 Job,返回提交状态</span><br>status = submitClient.submitJob(jobId, submitJobDir.toString(),job.getCredentials());<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/15/MapReduce/image-20210716155548544.png" alt="image-20210716155548544"></p>
+</li>
+<li><p><strong>FileInputFormat</strong> <strong>切片源码解析</strong></p>
+<p><img src="/2021/07/15/MapReduce/image-20210716155615517.png" alt="image-20210716155615517"></p>
+</li>
+</ol>
+<h4 id="3-1-3-FileInputFormat-切片机制"><a href="#3-1-3-FileInputFormat-切片机制" class="headerlink" title="3.1.3 FileInputFormat 切片机制"></a><strong>3.1.3 FileInputFormat</strong> <strong>切片机制</strong></h4><h3 id="3-3-Shuffle-机制"><a href="#3-3-Shuffle-机制" class="headerlink" title="3.3    Shuffle  机制"></a>3.3    Shuffle  机制</h3><h4 id="3-3-1-Shuffle-机制"><a href="#3-3-1-Shuffle-机制" class="headerlink" title="3.3.1 Shuffle  机制"></a>3.3.1 Shuffle  机制</h4><blockquote>
 <p>Map 方法之后，Reduce 方法之前的数据处理过程称之为 Shuffle。 </p>
 </blockquote>
 <p><img src="/2021/07/15/MapReduce/image-20210711152750691.png" alt="image-20210711152750691"></p>
@@ -420,12 +430,85 @@
 <p><strong>操作</strong></p>
 <ol>
 <li><p>增加自定义分区类 </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> xyz.liaray.pi.partitioner2;<br><br><span class="hljs-keyword">import</span> org.apache.hadoop.io.Text;<br><span class="hljs-keyword">import</span> org.apache.hadoop.mapreduce.Partitioner;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Author</span> Liar</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Date</span> 2021/7/11 15:43</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Version</span> 1.0</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@SuppressWarnings(&quot;all&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ProvincePartitioner</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Partitioner</span>&lt;<span class="hljs-title">Text</span>, <span class="hljs-title">FlowBean</span>&gt; </span>&#123;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getPartition</span><span class="hljs-params">(Text text, FlowBean flowBean, <span class="hljs-keyword">int</span> numPartitions)</span> </span>&#123;<br>        <span class="hljs-comment">//text 是手机号</span><br>        String phone = text.toString();<br>        <span class="hljs-comment">//h获取手机号前三位</span><br>        String prePhone = phone.substring(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>);<br><br>        <span class="hljs-keyword">int</span> partition;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;136&quot;</span>.equals(prePhone)) &#123;<br>            partition = <span class="hljs-number">0</span>;<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;137&quot;</span>.equals(prePhone)) &#123;<br>            partition = <span class="hljs-number">1</span>;<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;138&quot;</span>.equals(prePhone)) &#123;<br>            partition = <span class="hljs-number">2</span>;<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;139&quot;</span>.equals(prePhone)) &#123;<br>            partition = <span class="hljs-number">3</span>;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            partition = <span class="hljs-number">4</span>;<br>        &#125;<br>        <span class="hljs-comment">//返回分区号</span><br>        <span class="hljs-keyword">return</span> partition;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure></li>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> xyz.liaray.pi.partitioner2;<br><br><span class="hljs-keyword">import</span> org.apache.hadoop.io.Text;<br><span class="hljs-keyword">import</span> org.apache.hadoop.mapreduce.Partitioner;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Author</span> Liar</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Date</span> 2021/7/11 15:43</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Version</span> 1.0</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@SuppressWarnings(&quot;all&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ProvincePartitioner</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Partitioner</span>&lt;<span class="hljs-title">Text</span>, <span class="hljs-title">FlowBean</span>&gt; </span>&#123;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getPartition</span><span class="hljs-params">(Text text, FlowBean flowBean, <span class="hljs-keyword">int</span> numPartitions)</span> </span>&#123;<br>        <span class="hljs-comment">//text 是手机号</span><br>        String phone = text.toString();<br>        <span class="hljs-comment">//h获取手机号前三位</span><br>        String prePhone = phone.substring(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>);<br><br>        <span class="hljs-keyword">int</span> partition;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;136&quot;</span>.equals(prePhone)) &#123;<br>            partition = <span class="hljs-number">0</span>;<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;137&quot;</span>.equals(prePhone)) &#123;<br>            partition = <span class="hljs-number">1</span>;<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;138&quot;</span>.equals(prePhone)) &#123;<br>            partition = <span class="hljs-number">2</span>;<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;139&quot;</span>.equals(prePhone)) &#123; <br>            partition = <span class="hljs-number">3</span>;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            partition = <span class="hljs-number">4</span>;<br>        &#125;<br>        <span class="hljs-comment">//返回分区号</span><br>        <span class="hljs-keyword">return</span> partition;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure></li>
 <li><p>在驱动类中添加分区类 </p>
 </li>
 </ol>
 <figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 设置自定义分区器 </span><br>job.setPartitionerClass(ProvincePartitioner.class);<br><span class="hljs-comment">// 设置对应的 ReduceTask 的个数 </span><br>job.setNumReduceTasks(<span class="hljs-number">5</span>);<br></code></pre></td></tr></table></figure>
 
+
+
+<h2 id="4-第-4-章-Hadoop-数据压缩"><a href="#4-第-4-章-Hadoop-数据压缩" class="headerlink" title="4.第 4 章 Hadoop 数据压缩"></a>4.<strong>第</strong> 4 <strong>章</strong> Hadoop <strong>数据压缩</strong></h2><blockquote>
+<p><strong>压缩的好处与坏处</strong></p>
+<p>好处：减少磁盘IO、减少磁盘存储空间</p>
+<p>坏处：增加CPU的开销（需要对文件进行压缩和解压操作）</p>
+</blockquote>
+<blockquote>
+<p><strong>压缩原则</strong></p>
+<p>计算密集型的Job，少用压缩（减少CPU负载）</p>
+<p>IO密集型的Job，多用压缩（减少磁盘IO）</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>压缩格式</th>
+<th>Hadoop 自带？</th>
+<th>算法</th>
+<th>文件扩展名</th>
+<th>是否可切片</th>
+<th>换成压缩格式后，原来的程序是否需要修改</th>
+<th>优缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DEFLATE</td>
+<td>是，直接使用</td>
+<td>DEFLATE</td>
+<td>.deflate</td>
+<td>否</td>
+<td>和文本处理一样，不需要修改</td>
+<td></td>
+</tr>
+<tr>
+<td>Gzip</td>
+<td>是，直接使用</td>
+<td>DEFLATE</td>
+<td>.gz</td>
+<td>否</td>
+<td>和文本处理一样，不需要修改</td>
+<td>优点：压缩率比较高；<br>缺点：不支持 Split；压缩/解压速度一般；</td>
+</tr>
+<tr>
+<td>bzip2</td>
+<td>是，直接使用</td>
+<td>bzip2</td>
+<td>.bz2</td>
+<td>是</td>
+<td>和文本处理一样，不需要修改</td>
+<td>优点：压缩率高；支持 Split；<br>缺点：压缩/解压速度慢。</td>
+</tr>
+<tr>
+<td>LZO</td>
+<td>否，需要安装</td>
+<td>LZO</td>
+<td>.lzo</td>
+<td>是</td>
+<td>需要建索引，还需要指定输入格式</td>
+<td>优点：压缩/解压速度比较快；支持 Split；<br>缺点：压缩率一般；想支持切片需要额外创建索引。</td>
+</tr>
+<tr>
+<td>Snappy</td>
+<td>是，直接使用</td>
+<td>Snappy</td>
+<td>.snappy</td>
+<td>否</td>
+<td>和文本处理一样，不需要修改</td>
+<td>优点：压缩和解压缩速度快；<br>缺点：不支持 Split；压缩率一般；</td>
+</tr>
+</tbody></table>
+<p><strong>压缩位置选择</strong></p>
+<p>压缩可以在 MapReduce 作用的任意阶段启用</p>
+<p><img src="/2021/07/15/MapReduce/image-20210716170815978.png" alt="image-20210716170815978"></p>
 
     </div>
 </div>
