@@ -3,15 +3,15 @@
 
 	<head>
 		
-<title>Hello world-Welcome</title>
+<title>JavaSE-Welcome</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="shortcut icon" type="image/x-icon" href="/image/blog.svg">
 
 
-<meta name="keywords" content="Hexo,Hello world,">
-<meta name="description" content="Hexo博客——hellow world使用案例">
+<meta name="keywords" content="Java,JavaSE,">
+<meta name="description" content="javase一些忘记的点">
 
 
 <script src="/js/jquery.min.js"></script>
@@ -258,13 +258,13 @@
         <ul class="tag">
             
             
-            <li><a href="/tags/Hexo">Hexo</a></li>
+            <li><a href="/tags/Java">Java</a></li>
             
-            <li><a href="/tags/Hello world">Hello world</a></li>
+            <li><a href="/tags/JavaSE">JavaSE</a></li>
             
             
         </ul>
-        <h1>Hello world</h1>
+        <h1>JavaSE</h1>
         <div class="article-info">
             <div class="article-author">
                 
@@ -277,26 +277,34 @@
                 </svg>
                 
                 <span> <a href="">Liar</a></span>
-                <p>2020-11-03 20:33:36</p>
+                <p>2021-06-16 20:57:00</p>
             </div>
         </div>
     </div>
 </div>
 <div class="article-content">
     <div id="article" class="content">
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure>
+        <h1 id="JavaSE"><a href="#JavaSE" class="headerlink" title="JavaSE"></a>JavaSE</h1><h5 id="1-java7新特性-定义数字可用下划线"><a href="#1-java7新特性-定义数字可用下划线" class="headerlink" title="1.java7新特性    定义数字可用下划线"></a>1.java7新特性    定义数字可用下划线</h5><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">int</span> a = <span class="hljs-number">100_0000_0000</span>;<br></code></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure>
+<h5 id="2-精度转换-低精度到高精度自动转换-高精度到低精度强制转换"><a href="#2-精度转换-低精度到高精度自动转换-高精度到低精度强制转换" class="headerlink" title="2.精度转换    低精度到高精度自动转换    高精度到低精度强制转换"></a>2.精度转换    低精度到高精度自动转换    高精度到低精度强制转换</h5><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">int</span> a = <span class="hljs-number">100</span>;<br><span class="hljs-keyword">double</span> b = <span class="hljs-number">99.0</span>;<br><span class="hljs-keyword">int</span> c = (<span class="hljs-keyword">int</span>)b;<br><span class="hljs-keyword">double</span> d = a;<br></code></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure>
+<h5 id="3-尽量避免float、double之间数值比较，使用BigDecimal类"><a href="#3-尽量避免float、double之间数值比较，使用BigDecimal类" class="headerlink" title="3.尽量避免float、double之间数值比较，使用BigDecimal类"></a>3.尽量避免float、double之间数值比较，使用BigDecimal类</h5><h5 id="4-static和final都是修饰符，不区分先后位置"><a href="#4-static和final都是修饰符，不区分先后位置" class="headerlink" title="4.static和final都是修饰符，不区分先后位置"></a>4.static和final都是修饰符，不区分先后位置</h5><h5 id="5-命名规划"><a href="#5-命名规划" class="headerlink" title="5.命名规划"></a>5.命名规划</h5><p><img src="/2021/06/16/javase/%E5%91%BD%E5%90%8D%E8%A7%84%E5%88%92.png" alt="image_1"></p>
+<h5 id="6-位运算"><a href="#6-位运算" class="headerlink" title="6.位运算"></a>6.位运算</h5><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//	&lt;&lt;	*2		2&lt;&lt;3=16</span><br><span class="hljs-comment">//	&gt;&gt;	/2</span><br></code></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<h5 id="7-JavaDoc"><a href="#7-JavaDoc" class="headerlink" title="7.JavaDoc"></a>7.JavaDoc</h5><p><img src="/2021/06/16/javase/javadoc.png" alt="JavaDoc"></p>
+<h5 id="8-Scanner"><a href="#8-Scanner" class="headerlink" title="8.Scanner"></a>8.Scanner</h5><p><img src="/2021/06/16/javase/%E8%BE%93%E5%85%A5.png" alt="scanner"></p>
+<h5 id="9-重载"><a href="#9-重载" class="headerlink" title="9.重载"></a>9.重载</h5><p><img src="/2021/06/16/javase/%E9%87%8D%E8%BD%BD.png" alt="重载"></p>
+<h5 id="10-可变参数"><a href="#10-可变参数" class="headerlink" title="10.可变参数"></a>10.可变参数</h5><p><img src="/2021/06/16/javase/%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0.png" alt="可变参数"></p>
+<h5 id="11-面向对象——static"><a href="#11-面向对象——static" class="headerlink" title="11.面向对象——static"></a>11.面向对象——static</h5><p>static方法是和类一起加载的，static方法不能直接调用普通方法</p>
+<h5 id="12-构造器"><a href="#12-构造器" class="headerlink" title="12.构造器"></a>12.构造器</h5><p><img src="/2021/06/16/javase/%E6%9E%84%E9%80%A0%E5%99%A8.png" alt="构造器"></p>
+<p>一个类即使什么都不写，也会有构造方法</p>
+<p>new对象时，本质调用构造器</p>
+<p>一旦定义有参构造，无参构造必须显示定义 </p>
+<h5 id="13-super"><a href="#13-super" class="headerlink" title="13.super"></a>13.super</h5><p><img src="/2021/06/16/javase/super.png" alt="super"></p>
+<p>调用父类的构造 方法</p>
+<p>调用父类的构造器，必须在子类构造器的第一行</p>
+<h5 id="14-重写"><a href="#14-重写" class="headerlink" title="14.重写"></a>14.重写</h5><p><img src="/2021/06/16/javase/%E9%87%8D%E5%86%99.png" alt="重写"></p>
+<h5 id="15-多态"><a href="#15-多态" class="headerlink" title="15.多态"></a>15.多态</h5><p><img src="/2021/06/16/javase/%E5%A4%9A%E6%80%81.png" alt="多态"></p>
 
     </div>
 </div>
@@ -326,14 +334,21 @@
 </script>
 <div class="Last-Next">
     
-    <a href="/2021/06/16/javase/">
+    <a href="/2021/07/01/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AD%A6%E4%B9%A0/">
         <div class="last">
             <span>上一篇</span>
-            <p>JavaSE</p>
+            <p>大数据入门</p>
         </div>
     </a>
     
 
+    
+    <a href="/2020/11/03/hello-world/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>Hello world</p>
+        </div>
+    </a>
     
 </div>
 		
