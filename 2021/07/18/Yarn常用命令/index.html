@@ -3,15 +3,15 @@
 
 	<head>
 		
-<title>leetcode-Welcome</title>
+<title>Yarn常用命令-Welcome</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="shortcut icon" type="image/x-icon" href="/image/blog.svg">
 
 
-<meta name="keywords" content="leetcode,">
-<meta name="description" content="leetcode刷题记录">
+<meta name="keywords" content="大数据,Hadoop,Yarn,Shell,">
+<meta name="description" content="Yarn的常用命令">
 
 
 <script src="/js/jquery.min.js"></script>
@@ -258,11 +258,17 @@
         <ul class="tag">
             
             
-            <li><a href="/tags/leetcode">leetcode</a></li>
+            <li><a href="/tags/大数据">大数据</a></li>
+            
+            <li><a href="/tags/Hadoop">Hadoop</a></li>
+            
+            <li><a href="/tags/Yarn">Yarn</a></li>
+            
+            <li><a href="/tags/Shell">Shell</a></li>
             
             
         </ul>
-        <h1>leetcode</h1>
+        <h1>Yarn常用命令</h1>
         <div class="article-info">
             <div class="article-author">
                 
@@ -275,14 +281,60 @@
                 </svg>
                 
                 <span> <a href="">Liar</a></span>
-                <p>2021-07-16 21:16:26</p>
+                <p>2021-07-18 14:22:29</p>
             </div>
         </div>
     </div>
 </div>
 <div class="article-content">
     <div id="article" class="content">
-        
+        <h1 id="Yarn常用命令"><a href="#Yarn常用命令" class="headerlink" title="Yarn常用命令"></a>Yarn常用命令</h1><p><strong>yarn application 查看任务</strong>：</p>
+<p>列出所有 Application: <code>yarn application -list</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 ~]$ yarn application -list<br>2021-07-18 14:25:09,152 INFO client.RMProxy: Connecting to ResourceManager at hadoop103/192.168.10.103:8032<br>Total number of applications (application-types: [], states: [SUBMITTED, ACCEPTED, RUNNING] and tags: []):1<br>                Application-Id	    Application-Name	    Application-Type	      User	     Queue	             State	       Final-State	       Progress	                       Tracking-URL<br>application_1626445778207_0002	          word count	           MAPREDUCE	      liar	   default	           RUNNING	         UNDEFINED	            50%	             http://hadoop103:41100<br></code></pre></td></tr></table></figure>
+
+<p>根据Application的状态来过滤任务:<code>yarn application -list -appStates &lt;STATE&gt;</code> </p>
+<blockquote>
+<p>状态包括：ALL、NEW、NEW_SAVING、SUBMITTED、ACCEPTED、RUNNING、FINISHED、FAILED、KILLED</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 ~]$ yarn application -list -appStates FINISHED<br>2021-07-18 14:28:26,365 INFO client.RMProxy: Connecting to ResourceManager at hadoop103/192.168.10.103:8032<br>Total number of applications (application-types: [], states: [FINISHED] and tags: []):2<br>                Application-Id	    Application-Name	    Application-Type	      User	     Queue	             State	       Final-State	       Progress	                       Tracking-URL<br>application_1626445778207_0002	          word count	           MAPREDUCE	      liar	   default	          FINISHED	         SUCCEEDED	           100%	http://hadoop102:19888/jobhistory/job/job_1626445778207_0002<br>application_1626445778207_0001	          word count	           MAPREDUCE	      liar	   default	          FINISHED	         SUCCEEDED	           100%	http://hadoop102:19888/jobhistory/job/job_1626445778207_0001<br><br></code></pre></td></tr></table></figure>
+
+<p>Kill 掉 Application <code>yarn application -kill &lt;ApplicationID&gt;</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">yarn application -kill application_1626445778207_0002<br></code></pre></td></tr></table></figure>
+
+<p><strong>yarn logs</strong> <strong>查看日志</strong></p>
+<p>查询 Application 日志：<code>yarn logs -applicationId &lt;ApplicationID&gt;</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 ~]$ yarn logs -applicationId application_1626445778207_0002<br></code></pre></td></tr></table></figure>
+
+<p>列出所有 Application 尝试的列表：<code>yarn applicationattempt -list &lt;ApplicationId&gt;</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">yarn applicationattempt -list application_1626445778207_0002<br></code></pre></td></tr></table></figure>
+
+<p>打印 ApplicationAttemp 状态：<code>yarn applicationattempt -status &lt;ApplicationAttemptId&gt;</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">yarn applicationattempt -status application_1626445778207_0002<br></code></pre></td></tr></table></figure>
+
+<p><strong>yarn container查看容器</strong></p>
+<p>列出所有 Container：<code>yarn container -list &lt;ApplicationAttemptId&gt;</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">yarn container -list appattempt_1612577921195_0001_000001<br></code></pre></td></tr></table></figure>
+
+<p>打印 Container 状态：<code>yarn container -status &lt;ContainerId&gt;</code></p>
+<blockquote>
+<p>只有在任务跑的途中才能看到 container 的状态</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">yarn container -status container_1612577921195_0001_01_000001<br></code></pre></td></tr></table></figure>
+
+<p><strong>yarn node查看节点状态</strong></p>
+<p>列出所有节点：<code>yarn node -list -all</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 ~]$ yarn node -list -all<br>2021-07-18 14:49:14,042 INFO client.RMProxy: Connecting to ResourceManager at hadoop103/192.168.10.103:8032<br>Total Nodes:3<br>         Node-Id	     Node-State	Node-Http-Address	Number-of-Running-Containers<br> hadoop103:33752	        RUNNING	   hadoop103:8042	                           0<br> hadoop102:35969	        RUNNING	   hadoop102:8042	                           0<br> hadoop104:45348	        RUNNING	   hadoop104:8042	                           0<br>[liar@hadoop102 ~]$ <br></code></pre></td></tr></table></figure>
+
+<p><strong>yarn rmadmin更新配置</strong></p>
+<p>加载队列配置：<code>yarn rmadmin -refreshQueues</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 ~]$ yarn rmadmin -refreshQueues<br>2021-07-18 14:50:04,035 INFO client.RMProxy: Connecting to ResourceManager at hadoop103/192.168.10.103:8033<br><br></code></pre></td></tr></table></figure>
+
+<p><strong>yarn queue查看队列</strong></p>
+<p>打印队列信息：<code>yarn queue -status &lt;QueueName&gt;</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 ~]$ yarn queue -status default<br>2021-07-18 14:50:39,882 INFO client.RMProxy: Connecting to ResourceManager at hadoop103/192.168.10.103:8032<br>Queue Information : <br>Queue Name : default<br>	State : RUNNING<br>	Capacity : 100.0%<br>	Current Capacity : .0%<br>	Maximum Capacity : 100.0%<br>	Default Node Label expression : &lt;DEFAULT_PARTITION&gt;<br>	Accessible Node Labels : *<br>	Preemption : disabled<br>	Intra-queue Preemption : disabled<br><br></code></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/18/Yarn%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/image-20210718145910483.png" alt="image-20210718145910483"></p>
+
     </div>
 </div>
 <style>
@@ -311,19 +363,12 @@
 </script>
 <div class="Last-Next">
     
-    <a href="/2021/07/18/Yarn%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
-        <div class="last">
-            <span>上一篇</span>
-            <p>Yarn常用命令</p>
-        </div>
-    </a>
-    
 
     
-    <a href="/2021/07/16/Yarn/">
+    <a href="/2021/07/16/leetcode/">
         <div class="next">
             <span>下一篇</span>
-            <p>Yarn</p>
+            <p>leetcode</p>
         </div>
     </a>
     

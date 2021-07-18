@@ -3,7 +3,7 @@
 
 	<head>
 		
-<title>标签:Shell-Welcome</title>
+<title>Liaray&#39;s Blog-Welcome</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -33,7 +33,7 @@
 
 	<body>
 		
-<link rel="stylesheet" href="/css/tag.css">
+<link rel="stylesheet" href="/css/home.css">
 
 
 <link rel="stylesheet" href="/css/header.css">
@@ -49,13 +49,13 @@
 				<ul>
 					
 						
-								<li>
-									<a href="/">
-										主页
-									</a>
-									<span class="dot"></span>
-								</li>
-								
+							<li class="select">
+								<a href="/">
+									主页
+								</a>
+								<span class="dot"></span>
+							</li>
+							
 									
 						
 								<li>
@@ -76,13 +76,13 @@
 								
 									
 						
-							<li class="select">
-								<a href="/tags">
-									标签
-								</a>
-								<span class="dot"></span>
-							</li>
-							
+								<li>
+									<a href="/tags">
+										标签
+									</a>
+									<span class="dot"></span>
+								</li>
+								
 									
 						
 								<li>
@@ -246,32 +246,59 @@
 		<script>
 			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
 		</script>
-
 <div class="header-bg">
-    <div class="bg-content">
-        <span>
-            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imgtags.svg" alt="Q">
-        </span>
-        <h2> Shell </h2>
-    </div>
+	<div class="bg-content">
+		<span>
+			<img class="site-logo" src="/image/robot.svg" alt="Q">
+		</span>
+		<h2>
+			我本人间流浪客 奈何凡尘迷人眼
+		</h2>
+	</div>
 </div>
-<div class="article-content">
-    <div id="article" class="content">
-        <div class="list-group">
-            
-            
-            
-            <p class="h5">2021</p>
-            
-            <a href="/2021/07/18/Yarn%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="list-group-item list-group-item-action">
-                <span class="archive-post-title">Yarn常用命令</span>
-                <time style="float: right;">07-18</time>
-            </a>
-            
-        </div>
-    </div>
+<div class="main">
+	<div class="feed">
+		
+			<div class="feed-display">
+				<a href="/2020/09/16/Linux%E5%AD%A6%E4%B9%A0/">
+					<h2 class="feed-title">
+						Linux学习
+					</h2>
+					
+						<img src="https://cdn.jsdelivr.net/gh/newliar/CDN/blog_img/Linux.jpg" alt="Quiet">
+						
+				</a>
+				<div class="feed-meat">
+					<div class="meat-info">
+						<div class="info-auth">
+							<a href="">
+								Liar
+							</a>
+						</div>
+						<div class="info-data">
+							2020-09-16
+						</div>
+					</div>
+					<div class="meat-type"></div>
+				</div>
+			</div>
+			
+	</div>
 </div>
-<script>$(function () { $('.article-content').addClass('content-move') });</script>
+<div class="change-page">
+	
+		<div class="p-page">
+			<a href="/">
+				<div class="previous">
+					上一页
+				</div>
+			</a>
+		</div>
+		
+			
+</div>
+
+<script>$(function () { $('.feed').addClass('move'); })</script>
 		
 <link rel="stylesheet" href="/css/food.css">
 
