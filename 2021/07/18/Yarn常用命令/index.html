@@ -3,15 +3,15 @@
 
 	<head>
 		
-<title>HDFS核心参数-Welcome</title>
+<title>Yarn常用命令-Welcome</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="shortcut icon" type="image/x-icon" href="/image/blog.svg">
 
 
-<meta name="keywords" content="Hadoop,HDFS,性能调优,">
-<meta name="description" content="HDFS参数配置">
+<meta name="keywords" content="Hadoop,大数据,Yarn,Shell,">
+<meta name="description" content="Yarn的常用命令">
 
 
 <script src="/js/jquery.min.js"></script>
@@ -260,13 +260,15 @@
             
             <li><a href="/tags/Hadoop">Hadoop</a></li>
             
-            <li><a href="/tags/HDFS">HDFS</a></li>
+            <li><a href="/tags/大数据">大数据</a></li>
             
-            <li><a href="/tags/性能调优">性能调优</a></li>
+            <li><a href="/tags/Yarn">Yarn</a></li>
+            
+            <li><a href="/tags/Shell">Shell</a></li>
             
             
         </ul>
-        <h1>HDFS核心参数</h1>
+        <h1>Yarn常用命令</h1>
         <div class="article-info">
             <div class="article-author">
                 
@@ -279,49 +281,60 @@
                 </svg>
                 
                 <span> <a href="">Liar</a></span>
-                <p>2021-07-19 21:59:05</p>
+                <p>2021-07-18 14:22:29</p>
             </div>
         </div>
     </div>
 </div>
 <div class="article-content">
     <div id="article" class="content">
-        <h1 id="HDFS核心参数"><a href="#HDFS核心参数" class="headerlink" title="HDFS核心参数"></a>HDFS核心参数</h1><h2 id="1-NameNode内存生产配置"><a href="#1-NameNode内存生产配置" class="headerlink" title="1.NameNode内存生产配置"></a>1.NameNode内存生产配置</h2><p>在<strong>Hadoop2.x</strong>系列，NameNode 内存默认 2000m。在hadoop-env.sh 文件中可以配置NameNode内存👇</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">HADOOP_NAMENODE_OPTS=-Xmx3072m<br></code></pre></td></tr></table></figure>
+        <h1 id="Yarn常用命令"><a href="#Yarn常用命令" class="headerlink" title="Yarn常用命令"></a>Yarn常用命令</h1><p><strong>yarn application 查看任务</strong>：</p>
+<p>列出所有 Application: <code>yarn application -list</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 ~]$ yarn application -list<br>2021-07-18 14:25:09,152 INFO client.RMProxy: Connecting to ResourceManager at hadoop103/192.168.10.103:8032<br>Total number of applications (application-types: [], states: [SUBMITTED, ACCEPTED, RUNNING] and tags: []):1<br>                Application-Id	    Application-Name	    Application-Type	      User	     Queue	             State	       Final-State	       Progress	                       Tracking-URL<br>application_1626445778207_0002	          word count	           MAPREDUCE	      liar	   default	           RUNNING	         UNDEFINED	            50%	             http://hadoop103:41100<br></code></pre></td></tr></table></figure>
 
-<p>在<strong>Hadoop3.x</strong>系列，Hadoop的内存是动态分配的</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> The maximum amount of heap to use (Java -Xmx).  If no unit</span><br><span class="hljs-meta">#</span><span class="bash"> is provided, it will be converted to MB.  Daemons will</span><br><span class="hljs-meta">#</span><span class="bash"> prefer any Xmx setting <span class="hljs-keyword">in</span> their respective _OPT variable.</span><br><span class="hljs-meta">#</span><span class="bash"> There is no default; the JVM will autoscale based upon machine</span><br><span class="hljs-meta">#</span><span class="bash"> memory size.</span><br><span class="hljs-meta">#</span><span class="bash"> <span class="hljs-built_in">export</span> HADOOP_HEAPSIZE_MAX=</span><br><span class="hljs-meta"></span><br><span class="hljs-meta">#</span><span class="bash"> The minimum amount of heap to use (Java -Xms).  If no unit</span><br><span class="hljs-meta">#</span><span class="bash"> is provided, it will be converted to MB.  Daemons will</span><br><span class="hljs-meta">#</span><span class="bash"> prefer any Xms setting <span class="hljs-keyword">in</span> their respective _OPT variable.</span><br><span class="hljs-meta">#</span><span class="bash"> There is no default; the JVM will autoscale based upon machine</span><br><span class="hljs-meta">#</span><span class="bash"> memory size.</span><br><span class="hljs-meta">#</span><span class="bash"> <span class="hljs-built_in">export</span> HADOOP_HEAPSIZE_MIN=</span><br></code></pre></td></tr></table></figure>
+<p>根据Application的状态来过滤任务:<code>yarn application -list -appStates &lt;STATE&gt;</code> </p>
+<blockquote>
+<p>状态包括：ALL、NEW、NEW_SAVING、SUBMITTED、ACCEPTED、RUNNING、FINISHED、FAILED、KILLED</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 ~]$ yarn application -list -appStates FINISHED<br>2021-07-18 14:28:26,365 INFO client.RMProxy: Connecting to ResourceManager at hadoop103/192.168.10.103:8032<br>Total number of applications (application-types: [], states: [FINISHED] and tags: []):2<br>                Application-Id	    Application-Name	    Application-Type	      User	     Queue	             State	       Final-State	       Progress	                       Tracking-URL<br>application_1626445778207_0002	          word count	           MAPREDUCE	      liar	   default	          FINISHED	         SUCCEEDED	           100%	http://hadoop102:19888/jobhistory/job/job_1626445778207_0002<br>application_1626445778207_0001	          word count	           MAPREDUCE	      liar	   default	          FINISHED	         SUCCEEDED	           100%	http://hadoop102:19888/jobhistory/job/job_1626445778207_0001<br><br></code></pre></td></tr></table></figure>
 
-<p>可以通过<code> jmap -heap &lt;pid&gt;</code>查看节点占用内存</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 hadoop]$ jps<br>6465 JobHistoryServer<br>56339 Jps<br>5831 NameNode<br>5997 DataNode<br>6286 NodeManager<br>[liar@hadoop102 hadoop]$ jmap -heap 5831<br></code></pre></td></tr></table></figure>
+<p>Kill 掉 Application <code>yarn application -kill &lt;ApplicationID&gt;</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">yarn application -kill application_1626445778207_0002<br></code></pre></td></tr></table></figure>
 
-<p><img src="/2021/07/19/HDFS%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0/image-20210719220655347.png" alt="image-20210719220655347"></p>
-<h2 id="2-NameNode心跳并发配置"><a href="#2-NameNode心跳并发配置" class="headerlink" title="2.NameNode心跳并发配置"></a>2.NameNode心跳并发配置</h2><p>当服务器集群启动时，对于服务器的注册管理，NameNode设置合理的线程数来处理这个请求。</p>
-<p><img src="/2021/07/19/HDFS%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0/image-20210719221639487.png" alt="image-20210719221639487"></p>
-<p>在hdfs-site.xml中配置</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><code class="hljs xml">The number of Namenode RPC server threads that listen to requests <br>from clients. If dfs.namenode.servicerpc-address is not <br>configured then Namenode RPC server threads listen to requests <br>from all nodes.<br>NameNode 有一个工作线程池，用来处理不同 DataNode 的并发心跳以及客户端并发的元数据操作。<br>对于大集群或者有大量客户端的集群来说，通常需要增大该参数。默认值是 10。<br><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.namenode.handler.count<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>21<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p><strong>yarn logs</strong> <strong>查看日志</strong></p>
+<p>查询 Application 日志：<code>yarn logs -applicationId &lt;ApplicationID&gt;</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 ~]$ yarn logs -applicationId application_1626445778207_0002<br></code></pre></td></tr></table></figure>
 
-<p>在企业中线程数可以通过👇计算</p>
-<p><img src="/2021/07/19/HDFS%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0/image-20210719222014954.png" alt="image-20210719222014954"></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[atguigu@hadoop102 ~]$ sudo yum install -y python<br>[atguigu@hadoop102 ~]$ python<br>Python 2.7.5 (default, Apr 11 2018, 07:36:10) <br>[GCC 4.8.5 20150623 (Red Hat 4.8.5-28)] on linux2<br>Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more <br>information.<br><span class="hljs-meta">&gt;</span><span class="bash">&gt;&gt; import math</span><br><span class="hljs-meta">&gt;</span><span class="bash">&gt;&gt; <span class="hljs-built_in">print</span> int(20*math.log(3))</span><br>21<br><span class="hljs-meta">&gt;</span><span class="bash">&gt;&gt; quit()</span><br></code></pre></td></tr></table></figure>
+<p>列出所有 Application 尝试的列表：<code>yarn applicationattempt -list &lt;ApplicationId&gt;</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">yarn applicationattempt -list application_1626445778207_0002<br></code></pre></td></tr></table></figure>
 
-<h2 id="3-开启回收站"><a href="#3-开启回收站" class="headerlink" title="3.开启回收站"></a>3.开启回收站</h2><p><strong>回收站机制</strong></p>
-<p><img src="/2021/07/19/HDFS%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0/image-20210719222229702.png" alt="image-20210719222229702"></p>
-<p><strong>回收站参数说明：</strong></p>
-<ul>
-<li>默认值 fs.trash.interval = 0，0 表示禁用回收站；其他值表示设置文件的存活时间。</li>
-<li>默认值 fs.trash.checkpoint.interval = 0，检查回收站的间隔时间。如果该值为 0，则该值设置和 fs.trash.interval 的参数值相等。</li>
-<li>要求 fs.trash.checkpoint.interval &lt;= fs.trash.interval。 </li>
-</ul>
-<p><strong>启用回收站</strong></p>
-<p>修改 core-site.xml，配置垃圾回收时间为 1 分钟。</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>fs.trash.interval<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>打印 ApplicationAttemp 状态：<code>yarn applicationattempt -status &lt;ApplicationAttemptId&gt;</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">yarn applicationattempt -status application_1626445778207_0002<br></code></pre></td></tr></table></figure>
 
-<p><strong>查看回收站</strong></p>
-<p>回收站目录在 HDFS 集群中的路径：/user/liar/.Trash/….</p>
-<p>注意：通过网页上直接删除的文件也不会走回收站</p>
-<p><strong>命令行利用</strong> <code>hadoop fs -rm</code> <strong>命令删除的文件才会走回收站</strong></p>
-<p><strong>恢复回收站数据</strong><code>hadoop fs -mv &lt;source&gt; &lt;destination&gt;</code></p>
+<p><strong>yarn container查看容器</strong></p>
+<p>列出所有 Container：<code>yarn container -list &lt;ApplicationAttemptId&gt;</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">yarn container -list appattempt_1612577921195_0001_000001<br></code></pre></td></tr></table></figure>
+
+<p>打印 Container 状态：<code>yarn container -status &lt;ContainerId&gt;</code></p>
+<blockquote>
+<p>只有在任务跑的途中才能看到 container 的状态</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">yarn container -status container_1612577921195_0001_01_000001<br></code></pre></td></tr></table></figure>
+
+<p><strong>yarn node查看节点状态</strong></p>
+<p>列出所有节点：<code>yarn node -list -all</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 ~]$ yarn node -list -all<br>2021-07-18 14:49:14,042 INFO client.RMProxy: Connecting to ResourceManager at hadoop103/192.168.10.103:8032<br>Total Nodes:3<br>         Node-Id	     Node-State	Node-Http-Address	Number-of-Running-Containers<br> hadoop103:33752	        RUNNING	   hadoop103:8042	                           0<br> hadoop102:35969	        RUNNING	   hadoop102:8042	                           0<br> hadoop104:45348	        RUNNING	   hadoop104:8042	                           0<br>[liar@hadoop102 ~]$ <br></code></pre></td></tr></table></figure>
+
+<p><strong>yarn rmadmin更新配置</strong></p>
+<p>加载队列配置：<code>yarn rmadmin -refreshQueues</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 ~]$ yarn rmadmin -refreshQueues<br>2021-07-18 14:50:04,035 INFO client.RMProxy: Connecting to ResourceManager at hadoop103/192.168.10.103:8033<br><br></code></pre></td></tr></table></figure>
+
+<p><strong>yarn queue查看队列</strong></p>
+<p>打印队列信息：<code>yarn queue -status &lt;QueueName&gt;</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 ~]$ yarn queue -status default<br>2021-07-18 14:50:39,882 INFO client.RMProxy: Connecting to ResourceManager at hadoop103/192.168.10.103:8032<br>Queue Information : <br>Queue Name : default<br>	State : RUNNING<br>	Capacity : 100.0%<br>	Current Capacity : .0%<br>	Maximum Capacity : 100.0%<br>	Default Node Label expression : &lt;DEFAULT_PARTITION&gt;<br>	Accessible Node Labels : *<br>	Preemption : disabled<br>	Intra-queue Preemption : disabled<br><br></code></pre></td></tr></table></figure>
+
+<img src="/2021/07/18/Yarn%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/image-20210718145910483.png" alt="image-20210718145910483" style="zoom:200%;">
+
 
     </div>
 </div>
@@ -351,12 +364,19 @@
 </script>
 <div class="Last-Next">
     
+    <a href="/2021/07/19/HDFS%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>HDFS核心参数</p>
+        </div>
+    </a>
+    
 
     
-    <a href="/2021/07/18/Yarn%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+    <a href="/2021/07/16/leetcode/">
         <div class="next">
             <span>下一篇</span>
-            <p>Yarn常用命令</p>
+            <p>leetcode</p>
         </div>
     </a>
     
