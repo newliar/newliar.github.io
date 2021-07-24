@@ -3,15 +3,15 @@
 
 	<head>
 		
-<title>HDFS核心参数-Welcome</title>
+<title>HDFS多目录-Welcome</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="shortcut icon" type="image/x-icon" href="/image/blog.svg">
 
 
-<meta name="keywords" content="Hadoop,HDFS,性能调优,">
-<meta name="description" content="HDFS参数配置">
+<meta name="keywords" content="Hadoop,大数据,HDFS,">
+<meta name="description" content="HDFS的多目录配置以提到HDFS高可用">
 
 
 <script src="/js/jquery.min.js"></script>
@@ -260,13 +260,13 @@
             
             <li><a href="/tags/Hadoop">Hadoop</a></li>
             
-            <li><a href="/tags/HDFS">HDFS</a></li>
+            <li><a href="/tags/大数据">大数据</a></li>
             
-            <li><a href="/tags/性能调优">性能调优</a></li>
+            <li><a href="/tags/HDFS">HDFS</a></li>
             
             
         </ul>
-        <h1>HDFS核心参数</h1>
+        <h1>HDFS多目录</h1>
         <div class="article-info">
             <div class="article-author">
                 
@@ -279,49 +279,49 @@
                 </svg>
                 
                 <span> <a href="">Liar</a></span>
-                <p>2021-07-19 21:59:05</p>
+                <p>2021-07-20 10:33:04</p>
             </div>
         </div>
     </div>
 </div>
 <div class="article-content">
     <div id="article" class="content">
-        <h1 id="HDFS核心参数"><a href="#HDFS核心参数" class="headerlink" title="HDFS核心参数"></a>HDFS核心参数</h1><h2 id="1-NameNode内存生产配置"><a href="#1-NameNode内存生产配置" class="headerlink" title="1.NameNode内存生产配置"></a>1.NameNode内存生产配置</h2><p>在<strong>Hadoop2.x</strong>系列，NameNode 内存默认 2000m。在hadoop-env.sh 文件中可以配置NameNode内存👇</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">HADOOP_NAMENODE_OPTS=-Xmx3072m<br></code></pre></td></tr></table></figure>
+        <h1 id="HDFS多目录"><a href="#HDFS多目录" class="headerlink" title="HDFS多目录"></a>HDFS多目录</h1><h2 id="1-NameNode-多目录配置"><a href="#1-NameNode-多目录配置" class="headerlink" title="1.NameNode 多目录配置"></a>1.NameNode 多目录配置</h2><p>NameNode 的本地目录可以配置成多个，且<strong>每个目录存放内容相同</strong>，增加了可靠性</p>
+<p><img src="/2021/07/20/HDFS%E5%A4%9A%E7%9B%AE%E5%BD%95/image-20210720103538735.png" alt="image-20210720103538735"></p>
+<p>在 hdfs-site.xml 文件中添加如👇内容</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.namenode.name.dir<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br> 	<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>file://$&#123;hadoop.tmp.dir&#125;/dfs/name1,file://$&#123;hadoop.tmp.dir&#125;/dfs/name2<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br></code></pre></td></tr></table></figure>
 
-<p>在<strong>Hadoop3.x</strong>系列，Hadoop的内存是动态分配的</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> The maximum amount of heap to use (Java -Xmx).  If no unit</span><br><span class="hljs-meta">#</span><span class="bash"> is provided, it will be converted to MB.  Daemons will</span><br><span class="hljs-meta">#</span><span class="bash"> prefer any Xmx setting <span class="hljs-keyword">in</span> their respective _OPT variable.</span><br><span class="hljs-meta">#</span><span class="bash"> There is no default; the JVM will autoscale based upon machine</span><br><span class="hljs-meta">#</span><span class="bash"> memory size.</span><br><span class="hljs-meta">#</span><span class="bash"> <span class="hljs-built_in">export</span> HADOOP_HEAPSIZE_MAX=</span><br><span class="hljs-meta"></span><br><span class="hljs-meta">#</span><span class="bash"> The minimum amount of heap to use (Java -Xms).  If no unit</span><br><span class="hljs-meta">#</span><span class="bash"> is provided, it will be converted to MB.  Daemons will</span><br><span class="hljs-meta">#</span><span class="bash"> prefer any Xms setting <span class="hljs-keyword">in</span> their respective _OPT variable.</span><br><span class="hljs-meta">#</span><span class="bash"> There is no default; the JVM will autoscale based upon machine</span><br><span class="hljs-meta">#</span><span class="bash"> memory size.</span><br><span class="hljs-meta">#</span><span class="bash"> <span class="hljs-built_in">export</span> HADOOP_HEAPSIZE_MIN=</span><br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>因为每台服务器节点的磁盘情况不同，所以配置完之后可以选择不分发</p>
+</blockquote>
+<p>添加完毕之后<strong>停止集群</strong>，删除<strong>三台节点</strong>的 <strong>data</strong> 和 <strong>logs</strong> 中所有数据</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[atguigu@hadoop102 hadoop-3.1.3]$ rm -rf data/ logs/<br>[atguigu@hadoop103 hadoop-3.1.3]$ rm -rf data/ logs/<br>[atguigu@hadoop104 hadoop-3.1.3]$ rm -rf data/ logs/<br></code></pre></td></tr></table></figure>
 
-<p>可以通过<code> jmap -heap &lt;pid&gt;</code>查看节点占用内存</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 hadoop]$ jps<br>6465 JobHistoryServer<br>56339 Jps<br>5831 NameNode<br>5997 DataNode<br>6286 NodeManager<br>[liar@hadoop102 hadoop]$ jmap -heap 5831<br></code></pre></td></tr></table></figure>
+<p><strong>格式化集群</strong>并启动</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[atguigu@hadoop102 hadoop-3.1.3]$ bin/hdfs namenode -format<br>[atguigu@hadoop102 hadoop-3.1.3]$ sbin/start-dfs.sh<br></code></pre></td></tr></table></figure>
 
-<p><img src="/2021/07/19/HDFS%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0/image-20210719220655347.png" alt="image-20210719220655347"></p>
-<h2 id="2-NameNode心跳并发配置"><a href="#2-NameNode心跳并发配置" class="headerlink" title="2.NameNode心跳并发配置"></a>2.NameNode心跳并发配置</h2><p>当服务器集群启动时，对于服务器的注册管理，NameNode设置合理的线程数来处理这个请求。</p>
-<p><img src="/2021/07/19/HDFS%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0/image-20210719221639487.png" alt="image-20210719221639487"></p>
-<p>在hdfs-site.xml中配置</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><code class="hljs xml">The number of Namenode RPC server threads that listen to requests <br>from clients. If dfs.namenode.servicerpc-address is not <br>configured then Namenode RPC server threads listen to requests <br>from all nodes.<br>NameNode 有一个工作线程池，用来处理不同 DataNode 的并发心跳以及客户端并发的元数据操作。<br>对于大集群或者有大量客户端的集群来说，通常需要增大该参数。默认值是 10。<br><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.namenode.handler.count<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>21<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<h2 id="2-DataNode-多目录配置"><a href="#2-DataNode-多目录配置" class="headerlink" title="2.DataNode 多目录配置"></a>2.DataNode 多目录配置</h2><p>DataNode 可以配置成多个目录，<strong>每个目录存储的数据不一样</strong></p>
+<p><img src="/2021/07/20/HDFS%E5%A4%9A%E7%9B%AE%E5%BD%95/image-20210720103950716.png" alt="image-20210720103950716"></p>
+<p>在hdfs-site.xml 文件中添加如👇内容</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">&lt;property&gt;<br>	&lt;name&gt;dfs.datanode.data.dir&lt;/name&gt;<br>	&lt;value&gt;file://$&#123;hadoop.tmp.dir&#125;/dfs/data1,file://$&#123;hadoop.tmp.dir&#125;/dfs/data2&lt;/value&gt;<br>&lt;/property&gt;<br></code></pre></td></tr></table></figure>
 
-<p>在企业中线程数可以通过👇计算</p>
-<p><img src="/2021/07/19/HDFS%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0/image-20210719222014954.png" alt="image-20210719222014954"></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[atguigu@hadoop102 ~]$ sudo yum install -y python<br>[atguigu@hadoop102 ~]$ python<br>Python 2.7.5 (default, Apr 11 2018, 07:36:10) <br>[GCC 4.8.5 20150623 (Red Hat 4.8.5-28)] on linux2<br>Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more <br>information.<br><span class="hljs-meta">&gt;</span><span class="bash">&gt;&gt; import math</span><br><span class="hljs-meta">&gt;</span><span class="bash">&gt;&gt; <span class="hljs-built_in">print</span> int(20*math.log(3))</span><br>21<br><span class="hljs-meta">&gt;</span><span class="bash">&gt;&gt; quit()</span><br></code></pre></td></tr></table></figure>
-
-<h2 id="3-开启回收站"><a href="#3-开启回收站" class="headerlink" title="3.开启回收站"></a>3.开启回收站</h2><p><strong>回收站机制</strong></p>
-<p><img src="/2021/07/19/HDFS%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0/image-20210719222229702.png" alt="image-20210719222229702"></p>
-<p><strong>回收站参数说明：</strong></p>
-<ul>
-<li>默认值 fs.trash.interval = 0，0 表示禁用回收站；其他值表示设置文件的存活时间。</li>
-<li>默认值 fs.trash.checkpoint.interval = 0，检查回收站的间隔时间。如果该值为 0，则该值设置和 fs.trash.interval 的参数值相等。</li>
-<li>要求 fs.trash.checkpoint.interval &lt;= fs.trash.interval。 </li>
-</ul>
-<p><strong>启用回收站</strong></p>
-<p>修改 core-site.xml，配置垃圾回收时间为 1 分钟。</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>fs.trash.interval<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br></code></pre></td></tr></table></figure>
-
-<p><strong>查看回收站</strong></p>
-<p>回收站目录在 HDFS 集群中的路径：/user/liar/.Trash/….</p>
-<p>注意：通过网页上直接删除的文件也不会走回收站</p>
-<p><strong>命令行利用</strong> <code>hadoop fs -rm</code> <strong>命令删除的文件才会走回收站</strong></p>
-<p><strong>恢复回收站数据</strong><code>hadoop fs -mv &lt;source&gt; &lt;destination&gt;</code></p>
+<blockquote>
+<p>因为每台服务器节点的磁盘情况不同，所以配置完之后可以选择不分发</p>
+<p>添加完毕之后重新启动集群</p>
+</blockquote>
+<h2 id="3-集群数据均衡之磁盘间数据均衡"><a href="#3-集群数据均衡之磁盘间数据均衡" class="headerlink" title="3.集群数据均衡之磁盘间数据均衡"></a>3.集群数据均衡之磁盘间数据均衡</h2><blockquote>
+<p>生产环境，由于硬盘空间不足，往往需要增加一块硬盘。刚加载的硬盘没有数据时，可以执行磁盘数据均衡命令。<strong>（Hadoop3.x 新特性）</strong></p>
+</blockquote>
+<ol>
+<li><p>生成均衡计划</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">hdfs diskbalancer -plan hadoop103<br></code></pre></td></tr></table></figure></li>
+<li><p>执行均衡计划</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">hdfs diskbalancer -execute hadoop103.plan.json<br></code></pre></td></tr></table></figure></li>
+<li><p>查看当前均衡任务的执行情况</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">hdfs diskbalancer -query hadoop103<br></code></pre></td></tr></table></figure></li>
+<li><p>取消均衡任务</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">hdfs diskbalancer -cancel hadoop103.plan.json<br></code></pre></td></tr></table></figure></li>
+</ol>
 
     </div>
 </div>
@@ -351,19 +351,19 @@
 </script>
 <div class="Last-Next">
     
-    <a href="/2021/07/20/HDFS%E5%A4%9A%E7%9B%AE%E5%BD%95/">
+    <a href="/2021/07/24/Hive-DML%E6%93%8D%E4%BD%9C/">
         <div class="last">
             <span>上一篇</span>
-            <p>HDFS多目录</p>
+            <p>Hive DML操作</p>
         </div>
     </a>
     
 
     
-    <a href="/2021/07/18/Yarn%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+    <a href="/2021/07/19/HDFS%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0/">
         <div class="next">
             <span>下一篇</span>
-            <p>Yarn常用命令</p>
+            <p>HDFS核心参数</p>
         </div>
     </a>
     

@@ -3,15 +3,15 @@
 
 	<head>
 		
-<title>HDFS核心参数-Welcome</title>
+<title>Hive DML操作-Welcome</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="shortcut icon" type="image/x-icon" href="/image/blog.svg">
 
 
-<meta name="keywords" content="Hadoop,HDFS,性能调优,">
-<meta name="description" content="HDFS参数配置">
+<meta name="keywords" content="大数据,Hive,数据库,">
+<meta name="description" content="Hive基础之DML(Data Manipulation Language)数据操纵语言">
 
 
 <script src="/js/jquery.min.js"></script>
@@ -258,15 +258,15 @@
         <ul class="tag">
             
             
-            <li><a href="/tags/Hadoop">Hadoop</a></li>
+            <li><a href="/tags/大数据">大数据</a></li>
             
-            <li><a href="/tags/HDFS">HDFS</a></li>
+            <li><a href="/tags/Hive">Hive</a></li>
             
-            <li><a href="/tags/性能调优">性能调优</a></li>
+            <li><a href="/tags/数据库">数据库</a></li>
             
             
         </ul>
-        <h1>HDFS核心参数</h1>
+        <h1>Hive DML操作</h1>
         <div class="article-info">
             <div class="article-author">
                 
@@ -279,49 +279,67 @@
                 </svg>
                 
                 <span> <a href="">Liar</a></span>
-                <p>2021-07-19 21:59:05</p>
+                <p>2021-07-24 19:03:36</p>
             </div>
         </div>
     </div>
 </div>
 <div class="article-content">
     <div id="article" class="content">
-        <h1 id="HDFS核心参数"><a href="#HDFS核心参数" class="headerlink" title="HDFS核心参数"></a>HDFS核心参数</h1><h2 id="1-NameNode内存生产配置"><a href="#1-NameNode内存生产配置" class="headerlink" title="1.NameNode内存生产配置"></a>1.NameNode内存生产配置</h2><p>在<strong>Hadoop2.x</strong>系列，NameNode 内存默认 2000m。在hadoop-env.sh 文件中可以配置NameNode内存👇</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">HADOOP_NAMENODE_OPTS=-Xmx3072m<br></code></pre></td></tr></table></figure>
+        <h1 id="Hive基础——DML"><a href="#Hive基础——DML" class="headerlink" title="Hive基础——DML"></a>Hive基础——DML</h1><h2 id="数据导入"><a href="#数据导入" class="headerlink" title="数据导入"></a>数据导入</h2><p>向表中装载数据（load）</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql">load data [<span class="hljs-keyword">local</span>] inpath <span class="hljs-operator">&lt;</span>data file path<span class="hljs-operator">&gt;</span> [overwrite] <span class="hljs-keyword">into</span> <span class="hljs-keyword">table</span> <span class="hljs-operator">&lt;</span>tb name<span class="hljs-operator">&gt;</span> [<span class="hljs-keyword">partition</span> (partcol1<span class="hljs-operator">=</span>val1,…)];<br></code></pre></td></tr></table></figure>
 
-<p>在<strong>Hadoop3.x</strong>系列，Hadoop的内存是动态分配的</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> The maximum amount of heap to use (Java -Xmx).  If no unit</span><br><span class="hljs-meta">#</span><span class="bash"> is provided, it will be converted to MB.  Daemons will</span><br><span class="hljs-meta">#</span><span class="bash"> prefer any Xmx setting <span class="hljs-keyword">in</span> their respective _OPT variable.</span><br><span class="hljs-meta">#</span><span class="bash"> There is no default; the JVM will autoscale based upon machine</span><br><span class="hljs-meta">#</span><span class="bash"> memory size.</span><br><span class="hljs-meta">#</span><span class="bash"> <span class="hljs-built_in">export</span> HADOOP_HEAPSIZE_MAX=</span><br><span class="hljs-meta"></span><br><span class="hljs-meta">#</span><span class="bash"> The minimum amount of heap to use (Java -Xms).  If no unit</span><br><span class="hljs-meta">#</span><span class="bash"> is provided, it will be converted to MB.  Daemons will</span><br><span class="hljs-meta">#</span><span class="bash"> prefer any Xms setting <span class="hljs-keyword">in</span> their respective _OPT variable.</span><br><span class="hljs-meta">#</span><span class="bash"> There is no default; the JVM will autoscale based upon machine</span><br><span class="hljs-meta">#</span><span class="bash"> memory size.</span><br><span class="hljs-meta">#</span><span class="bash"> <span class="hljs-built_in">export</span> HADOOP_HEAPSIZE_MIN=</span><br></code></pre></td></tr></table></figure>
+<ol>
+<li>load data:表示加载数据</li>
+<li>local:表示从本地加载数据到 hive 表；否则从 HDFS 加载数据到 hive 表 </li>
+<li>inpath:表示加载数据的路径</li>
+<li>overwrite:表示覆盖表中已有数据，否则表示追加</li>
+<li>into table:表示加载到哪张表</li>
+<li>partition:表示上传到指定分区</li>
+</ol>
+<p>例子如下👇</p>
+<ol>
+<li><p>创建一张表</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> student1(id <span class="hljs-type">int</span>, name string) <span class="hljs-type">row</span> format delimited fields terminated <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;\t&#x27;</span>;<br></code></pre></td></tr></table></figure></li>
+<li><p>加载本地文件到 hive</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql">load data <span class="hljs-keyword">local</span> inpath <span class="hljs-string">&#x27;./student.txt&#x27;</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">table</span> default.student;<br></code></pre></td></tr></table></figure>
 
-<p>可以通过<code> jmap -heap &lt;pid&gt;</code>查看节点占用内存</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 hadoop]$ jps<br>6465 JobHistoryServer<br>56339 Jps<br>5831 NameNode<br>5997 DataNode<br>6286 NodeManager<br>[liar@hadoop102 hadoop]$ jmap -heap 5831<br></code></pre></td></tr></table></figure>
+<p>此处defalut为库名，如果不指定库名默认就是当前库</p>
+</li>
+<li><p>加载 HDFS 文件到 hive 中</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql">hive (<span class="hljs-keyword">default</span>)<span class="hljs-operator">&gt;</span> dfs <span class="hljs-operator">-</span>put <span class="hljs-operator">/</span>opt<span class="hljs-operator">/</span><span class="hljs-keyword">module</span><span class="hljs-operator">/</span>hive<span class="hljs-operator">/</span>student.txt <span class="hljs-operator">/</span><span class="hljs-keyword">user</span><span class="hljs-operator">/</span>liar<span class="hljs-operator">/</span>hive; #上传文件到 HDFS<br>hive (<span class="hljs-keyword">default</span>)<span class="hljs-operator">&gt;</span> load data inpath <span class="hljs-string">&#x27;/user/liar/hive&#x27;</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">table</span> student; #加载 HDFS 上数据<br></code></pre></td></tr></table></figure></li>
+</ol>
+<p>通过查询语句向表中插入数据（insert）</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span><span class="hljs-operator">|</span>overwrite <span class="hljs-operator">&lt;</span>tb_name<span class="hljs-operator">&gt;</span>(column_value column_type, ... )<br>	<span class="hljs-keyword">select</span> (column_value column_type, ... ) <span class="hljs-keyword">from</span> <span class="hljs-operator">&lt;</span>tb_name<span class="hljs-operator">&gt;</span> [<span class="hljs-keyword">where</span> ...]<br></code></pre></td></tr></table></figure>
 
-<p><img src="/2021/07/19/HDFS%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0/image-20210719220655347.png" alt="image-20210719220655347"></p>
-<h2 id="2-NameNode心跳并发配置"><a href="#2-NameNode心跳并发配置" class="headerlink" title="2.NameNode心跳并发配置"></a>2.NameNode心跳并发配置</h2><p>当服务器集群启动时，对于服务器的注册管理，NameNode设置合理的线程数来处理这个请求。</p>
-<p><img src="/2021/07/19/HDFS%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0/image-20210719221639487.png" alt="image-20210719221639487"></p>
-<p>在hdfs-site.xml中配置</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><code class="hljs xml">The number of Namenode RPC server threads that listen to requests <br>from clients. If dfs.namenode.servicerpc-address is not <br>configured then Namenode RPC server threads listen to requests <br>from all nodes.<br>NameNode 有一个工作线程池，用来处理不同 DataNode 的并发心跳以及客户端并发的元数据操作。<br>对于大集群或者有大量客户端的集群来说，通常需要增大该参数。默认值是 10。<br><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.namenode.handler.count<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>21<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>查询语句中创建表并加载数据(as select)</p>
+<p>根据查询结果创建表（查询的结果会添加到新创建的表中）</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> [if <span class="hljs-keyword">not</span> <span class="hljs-keyword">exists</span>] <span class="hljs-operator">&lt;</span>tb_name<span class="hljs-operator">&gt;</span><br><span class="hljs-keyword">as</span> <span class="hljs-keyword">select</span> (column_value column_type, ... ) <span class="hljs-keyword">from</span> <span class="hljs-operator">&lt;</span>tb_name<span class="hljs-operator">&gt;</span>;<br></code></pre></td></tr></table></figure>
 
-<p>在企业中线程数可以通过👇计算</p>
-<p><img src="/2021/07/19/HDFS%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0/image-20210719222014954.png" alt="image-20210719222014954"></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[atguigu@hadoop102 ~]$ sudo yum install -y python<br>[atguigu@hadoop102 ~]$ python<br>Python 2.7.5 (default, Apr 11 2018, 07:36:10) <br>[GCC 4.8.5 20150623 (Red Hat 4.8.5-28)] on linux2<br>Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more <br>information.<br><span class="hljs-meta">&gt;</span><span class="bash">&gt;&gt; import math</span><br><span class="hljs-meta">&gt;</span><span class="bash">&gt;&gt; <span class="hljs-built_in">print</span> int(20*math.log(3))</span><br>21<br><span class="hljs-meta">&gt;</span><span class="bash">&gt;&gt; quit()</span><br></code></pre></td></tr></table></figure>
+<p>创建表时通过Location 指定加载数据路径</p>
+<p>通过使用location可以达到文件不在当前目录也可以创建表并导入文件数据</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">external</span> <span class="hljs-keyword">table</span> [if <span class="hljs-keyword">not</span> <span class="hljs-keyword">exists</span>] <span class="hljs-operator">&lt;</span>tb_name<span class="hljs-operator">&gt;</span>(column_value column_type, ... )<br><span class="hljs-type">row</span> format delimited fields terminated <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;\t&#x27;</span><br>location <span class="hljs-operator">&lt;</span>file_path<span class="hljs-operator">&gt;</span>;<br></code></pre></td></tr></table></figure>
 
-<h2 id="3-开启回收站"><a href="#3-开启回收站" class="headerlink" title="3.开启回收站"></a>3.开启回收站</h2><p><strong>回收站机制</strong></p>
-<p><img src="/2021/07/19/HDFS%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0/image-20210719222229702.png" alt="image-20210719222229702"></p>
-<p><strong>回收站参数说明：</strong></p>
-<ul>
-<li>默认值 fs.trash.interval = 0，0 表示禁用回收站；其他值表示设置文件的存活时间。</li>
-<li>默认值 fs.trash.checkpoint.interval = 0，检查回收站的间隔时间。如果该值为 0，则该值设置和 fs.trash.interval 的参数值相等。</li>
-<li>要求 fs.trash.checkpoint.interval &lt;= fs.trash.interval。 </li>
-</ul>
-<p><strong>启用回收站</strong></p>
-<p>修改 core-site.xml，配置垃圾回收时间为 1 分钟。</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>fs.trash.interval<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br> <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>Import数据到指定Hive表中</p>
+<p>先用 export 导出后，再将数据导入，export 会导出元数据数据</p>
+<p>导出</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql">export <span class="hljs-keyword">table</span> default.student <br><span class="hljs-keyword">to</span> <span class="hljs-string">&#x27;/user/hive/warehouse/export/student&#x27;</span>;<br></code></pre></td></tr></table></figure>
 
-<p><strong>查看回收站</strong></p>
-<p>回收站目录在 HDFS 集群中的路径：/user/liar/.Trash/….</p>
-<p>注意：通过网页上直接删除的文件也不会走回收站</p>
-<p><strong>命令行利用</strong> <code>hadoop fs -rm</code> <strong>命令删除的文件才会走回收站</strong></p>
-<p><strong>恢复回收站数据</strong><code>hadoop fs -mv &lt;source&gt; &lt;destination&gt;</code></p>
+<p>导入</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql">import <span class="hljs-keyword">table</span> student2<br><span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;/user/hive/warehouse/export/student&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="数据导出"><a href="#数据导出" class="headerlink" title="数据导出"></a>数据导出</h2><p>将查询的结果导出到本地</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">insert</span> overwrite <span class="hljs-keyword">local</span> directory <br><span class="hljs-string">&#x27;/opt/module/hive/data/export/student&#x27;</span><br><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> student;<br></code></pre></td></tr></table></figure>
+
+<p>将查询的结果格式化导出到本地</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">insert</span> overwrite <span class="hljs-keyword">local</span> directory <br>	<span class="hljs-string">&#x27;/opt/module/hive/data/export/student1&#x27;</span><br>	<span class="hljs-type">ROW</span> FORMAT DELIMITED FIELDS TERMINATED <span class="hljs-keyword">BY</span> <span class="hljs-string">&#x27;\t&#x27;</span><br>	<span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> student;<br></code></pre></td></tr></table></figure>
+
+<p>将查询的结果导出到HDFS上(没有local)</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">insert</span> overwrite directory <span class="hljs-string">&#x27;/user/atguigu/student2&#x27;</span><br><span class="hljs-type">ROW</span> FORMAT DELIMITED FIELDS TERMINATED <span class="hljs-keyword">BY</span> <span class="hljs-string">&#x27;\t&#x27;</span> <br><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> student;<br></code></pre></td></tr></table></figure>
+
+<p>导出时表可以不存在，也可以为空表，但<strong>如果表存在且不为空不可导入</strong></p>
 
     </div>
 </div>
@@ -351,19 +369,19 @@
 </script>
 <div class="Last-Next">
     
-    <a href="/2021/07/20/HDFS%E5%A4%9A%E7%9B%AE%E5%BD%95/">
+    <a href="/2021/07/24/Hive-DDL%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C/">
         <div class="last">
             <span>上一篇</span>
-            <p>HDFS多目录</p>
+            <p>Hive基础——DDL数据操作</p>
         </div>
     </a>
     
 
     
-    <a href="/2021/07/18/Yarn%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+    <a href="/2021/07/20/HDFS%E5%A4%9A%E7%9B%AE%E5%BD%95/">
         <div class="next">
             <span>下一篇</span>
-            <p>Yarn常用命令</p>
+            <p>HDFS多目录</p>
         </div>
     </a>
     
