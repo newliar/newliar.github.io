@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		
+<title>SQL join-Welcome</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/blog.svg">
+
+
+<meta name="keywords" content="Hive,数据库,MySQL,join查询,">
+<meta name="description" content="MySQL和Hive中join的用法">
+
+
+<script src="/js/jquery.min.js"></script>
+
+
+
+<!-- Baidu Analytics -->
+<script defer>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?4b5fe1472f22fa";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+	<meta name="generator" content="Hexo 5.4.0"></head>
+
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
+
+
+<link rel="stylesheet" href="/css/page_cente.css">
+
+
+<link rel="stylesheet" href="/css/atom-one-dark.css">
+
+
+<link rel="stylesheet" href="/css/header.css">
+
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/robot.svg" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										主页
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										归档
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										种类
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										标签
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										友情链接
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										关于
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>Liar</h2>
+    </div>
+    <ul>
+        
+        <li>
+            <a href="/">主页</a>
+        </li>
+        
+        <li>
+            <a href="/archives">归档</a>
+        </li>
+        
+        <li>
+            <a href="/categories">种类</a>
+        </li>
+        
+        <li>
+            <a href="/tags">标签</a>
+        </li>
+        
+        <li>
+            <a href="/links">友情链接</a>
+        </li>
+        
+        <li>
+            <a href="/about">关于</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/newliar">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
+</div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
+
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
+
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
+
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
+
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
+
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/Hive">Hive</a></li>
+            
+            <li><a href="/tags/数据库">数据库</a></li>
+            
+            <li><a href="/tags/MySQL">MySQL</a></li>
+            
+            <li><a href="/tags/join查询">join查询</a></li>
+            
+            
+        </ul>
+        <h1>SQL join</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">Liar</a></span>
+                <p>2021-07-25 14:27:10</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <h1 id="SQL里的各种JOIN（附加Hive中join用法）"><a href="#SQL里的各种JOIN（附加Hive中join用法）" class="headerlink" title="SQL里的各种JOIN（附加Hive中join用法）"></a>SQL里的各种JOIN（附加Hive中join用法）</h1><p><img src="https://www.runoob.com/wp-content/uploads/2019/01/sql-join.png" alt="img"></p>
+<p>先准备两张表，如下所示👇</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> student;<br><span class="hljs-operator">+</span><span class="hljs-comment">------+-----------+---------+</span><br><span class="hljs-operator">|</span> id   <span class="hljs-operator">|</span> name      <span class="hljs-operator">|</span> tech_id <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+-----------+---------+</span><br><span class="hljs-operator">|</span> <span class="hljs-number">1001</span> <span class="hljs-operator">|</span> xiaoming  <span class="hljs-operator">|</span>       <span class="hljs-number">1</span> <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span> <span class="hljs-number">1002</span> <span class="hljs-operator">|</span> xiaohong  <span class="hljs-operator">|</span>       <span class="hljs-number">1</span> <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span> <span class="hljs-number">1003</span> <span class="hljs-operator">|</span> xiaozhang <span class="hljs-operator">|</span>       <span class="hljs-number">2</span> <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span> <span class="hljs-number">1004</span> <span class="hljs-operator">|</span> PK        <span class="hljs-operator">|</span>     <span class="hljs-number">666</span> <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+-----------+---------+</span><br><span class="hljs-number">4</span> <span class="hljs-keyword">rows</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span> (<span class="hljs-number">0.04</span> sec)<br><br>mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> teacher;<br><span class="hljs-operator">+</span><span class="hljs-comment">------+-------------+---------+</span><br><span class="hljs-operator">|</span> id   <span class="hljs-operator">|</span> name        <span class="hljs-operator">|</span> type    <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+-------------+---------+</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">1</span> <span class="hljs-operator">|</span> zhanglaoshi <span class="hljs-operator">|</span> math    <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">2</span> <span class="hljs-operator">|</span> lilaoshi    <span class="hljs-operator">|</span> english <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">7</span> <span class="hljs-operator">|</span> Tony        <span class="hljs-operator">|</span> CS      <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+-------------+---------+</span><br><span class="hljs-number">3</span> <span class="hljs-keyword">rows</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span> (<span class="hljs-number">0.00</span> sec)<br></code></pre></td></tr></table></figure>
+
+<h2 id="INNER-JOIN"><a href="#INNER-JOIN" class="headerlink" title="INNER JOIN"></a><strong>INNER JOIN</strong></h2><p><img src="/2021/07/25/SQL-join/image-20210725143028738.png" alt="image-20210725143028738"></p>
+<p><strong>INNER JOIN</strong>为内连接，内连接能将左表和右表中被关联的数据连接后返回。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> s.id <span class="hljs-keyword">as</span> s_id, s.name <span class="hljs-keyword">as</span> s_name, s.tech_id <span class="hljs-keyword">as</span> t_id, <br>	t.name <span class="hljs-keyword">as</span> t_name, t.type <span class="hljs-keyword">as</span> t_type <br>    <span class="hljs-keyword">from</span> student s<br>    <span class="hljs-keyword">inner</span> <span class="hljs-keyword">join</span> teacher t<br>    <span class="hljs-keyword">on</span> s.tech_id <span class="hljs-operator">=</span> t.id;<br><span class="hljs-operator">+</span><span class="hljs-comment">------+-----------+------+-------------+---------+</span><br><span class="hljs-operator">|</span> s_id <span class="hljs-operator">|</span> s_name    <span class="hljs-operator">|</span> t_id <span class="hljs-operator">|</span> t_name      <span class="hljs-operator">|</span> t_type  <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+-----------+------+-------------+---------+</span><br><span class="hljs-operator">|</span> <span class="hljs-number">1001</span> <span class="hljs-operator">|</span> xiaoming  <span class="hljs-operator">|</span>    <span class="hljs-number">1</span> <span class="hljs-operator">|</span> zhanglaoshi <span class="hljs-operator">|</span> math    <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span> <span class="hljs-number">1002</span> <span class="hljs-operator">|</span> xiaohong  <span class="hljs-operator">|</span>    <span class="hljs-number">1</span> <span class="hljs-operator">|</span> zhanglaoshi <span class="hljs-operator">|</span> math    <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span> <span class="hljs-number">1003</span> <span class="hljs-operator">|</span> xiaozhang <span class="hljs-operator">|</span>    <span class="hljs-number">2</span> <span class="hljs-operator">|</span> lilaoshi    <span class="hljs-operator">|</span> english <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+-----------+------+-------------+---------+</span><br><span class="hljs-number">3</span> <span class="hljs-keyword">rows</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span> (<span class="hljs-number">0.02</span> sec)<br></code></pre></td></tr></table></figure>
+
+<h2 id="LEFT-JOIN"><a href="#LEFT-JOIN" class="headerlink" title="LEFT JOIN"></a><strong>LEFT JOIN</strong></h2><p><img src="/2021/07/25/SQL-join/image-20210725144543072.png" alt="image-20210725144543072"></p>
+<p><strong>LEFT JOIN</strong>为左连接，也可写作<strong>LEFT OUTER JOIN</strong>。左连接可以将左表和右表联合查询，并返回左表所有数据。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> s.id <span class="hljs-keyword">as</span> s_id, s.name <span class="hljs-keyword">as</span> s_name, s.tech_id <span class="hljs-keyword">as</span> t_id, <br>	t.name <span class="hljs-keyword">as</span> t_name, t.type <span class="hljs-keyword">as</span> t_type  <br>	<span class="hljs-keyword">from</span> student s <br>	<span class="hljs-keyword">left</span> <span class="hljs-keyword">join</span> teacher t <br>	<span class="hljs-keyword">on</span> s.tech_id <span class="hljs-operator">=</span> t.id;<br><span class="hljs-operator">+</span><span class="hljs-comment">------+-----------+------+-------------+---------+</span><br><span class="hljs-operator">|</span> s_id <span class="hljs-operator">|</span> s_name    <span class="hljs-operator">|</span> t_id <span class="hljs-operator">|</span> t_name      <span class="hljs-operator">|</span> t_type  <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+-----------+------+-------------+---------+</span><br><span class="hljs-operator">|</span> <span class="hljs-number">1001</span> <span class="hljs-operator">|</span> xiaoming  <span class="hljs-operator">|</span>    <span class="hljs-number">1</span> <span class="hljs-operator">|</span> zhanglaoshi <span class="hljs-operator">|</span> math    <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span> <span class="hljs-number">1002</span> <span class="hljs-operator">|</span> xiaohong  <span class="hljs-operator">|</span>    <span class="hljs-number">1</span> <span class="hljs-operator">|</span> zhanglaoshi <span class="hljs-operator">|</span> math    <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span> <span class="hljs-number">1003</span> <span class="hljs-operator">|</span> xiaozhang <span class="hljs-operator">|</span>    <span class="hljs-number">2</span> <span class="hljs-operator">|</span> lilaoshi    <span class="hljs-operator">|</span> english <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span> <span class="hljs-number">1004</span> <span class="hljs-operator">|</span> PK        <span class="hljs-operator">|</span>  <span class="hljs-number">666</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>        <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>    <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+-----------+------+-------------+---------+</span><br><span class="hljs-number">4</span> <span class="hljs-keyword">rows</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span> (<span class="hljs-number">0.00</span> sec)<br></code></pre></td></tr></table></figure>
+
+<h2 id="RIGHT-JOIN"><a href="#RIGHT-JOIN" class="headerlink" title="RIGHT JOIN"></a>RIGHT JOIN</h2><p><img src="/2021/07/25/SQL-join/image-20210725145646113.png" alt="image-20210725145646113"></p>
+<p><strong>RIGHT JOIN</strong>为右连接，也可以写作<strong>RIGHT OUTER JOIN</strong>。右连接可以将左表和右表联合查询，并返回右表所有数据。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> s.id <span class="hljs-keyword">as</span> s_id, s.name <span class="hljs-keyword">as</span> s_name, s.tech_id <span class="hljs-keyword">as</span> t_id, <br>    t.name <span class="hljs-keyword">as</span> t_name, t.type <span class="hljs-keyword">as</span> t_type  <br>    <span class="hljs-keyword">from</span> student s <br>    <span class="hljs-keyword">right</span> <span class="hljs-keyword">join</span> teacher t<br>    <span class="hljs-keyword">on</span> s.tech_id <span class="hljs-operator">=</span> t.id;<br><span class="hljs-operator">+</span><span class="hljs-comment">------+-----------+------+-------------+---------+</span><br><span class="hljs-operator">|</span> s_id <span class="hljs-operator">|</span> s_name    <span class="hljs-operator">|</span> t_id <span class="hljs-operator">|</span> t_name      <span class="hljs-operator">|</span> t_type  <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+-----------+------+-------------+---------+</span><br><span class="hljs-operator">|</span> <span class="hljs-number">1001</span> <span class="hljs-operator">|</span> xiaoming  <span class="hljs-operator">|</span>    <span class="hljs-number">1</span> <span class="hljs-operator">|</span> zhanglaoshi <span class="hljs-operator">|</span> math    <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span> <span class="hljs-number">1002</span> <span class="hljs-operator">|</span> xiaohong  <span class="hljs-operator">|</span>    <span class="hljs-number">1</span> <span class="hljs-operator">|</span> zhanglaoshi <span class="hljs-operator">|</span> math    <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span> <span class="hljs-number">1003</span> <span class="hljs-operator">|</span> xiaozhang <span class="hljs-operator">|</span>    <span class="hljs-number">2</span> <span class="hljs-operator">|</span> lilaoshi    <span class="hljs-operator">|</span> english <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>      <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span> <span class="hljs-operator">|</span> Tony        <span class="hljs-operator">|</span> CS      <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+-----------+------+-------------+---------+</span><br><span class="hljs-number">4</span> <span class="hljs-keyword">rows</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span> (<span class="hljs-number">0.12</span> sec)<br></code></pre></td></tr></table></figure>
+
+<h2 id="FULL-JOIN"><a href="#FULL-JOIN" class="headerlink" title="FULL JOIN"></a>FULL JOIN</h2><p>FULL JOIN为全连接，也可以写作FULL OUTER JOIN。全连接能返回左右表中所有记录。</p>
+<p><img src="/2021/07/25/SQL-join/image-20210725150059536.png" alt="image-20210725150059536"></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> s.id <span class="hljs-keyword">as</span> s_id, s.name <span class="hljs-keyword">as</span> s_name, s.tech_id <span class="hljs-keyword">as</span> t_id, <br>	t.name <span class="hljs-keyword">as</span> t_name, t.type <span class="hljs-keyword">as</span> t_type <br>	<span class="hljs-keyword">from</span> student s <br>	<span class="hljs-keyword">full</span> <span class="hljs-keyword">join</span> teacher t <br>	<span class="hljs-keyword">on</span> s.tech_id <span class="hljs-operator">=</span> t.id;<br>    <br>ERROR <span class="hljs-number">1064</span> (<span class="hljs-number">42000</span>): You have an error <span class="hljs-keyword">in</span> your <span class="hljs-keyword">SQL</span> syntax; <span class="hljs-keyword">check</span> the manual that corresponds <span class="hljs-keyword">to</span> your MySQL server version <span class="hljs-keyword">for</span> the <span class="hljs-keyword">right</span> syntax <span class="hljs-keyword">to</span> use near <span class="hljs-string">&#x27;full join teacher t on s.tech_id = t.id&#x27;</span> <span class="hljs-keyword">at</span> line <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<p><em>提示当前 MySQL 版本不支持全连接。内连接、左连接和右连接 Hive 的语法和 MySQL 差不多。下面使用 Hive (hql) 来演示全连接。</em>👇</p>
+<p>Hive存储的两张表如下所示</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql">hive (<span class="hljs-keyword">default</span>)<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> student;<br>OK<br>student.id	student.name	student.tech_id<br><span class="hljs-number">1001</span>	xiaoming	<span class="hljs-number">1</span><br><span class="hljs-number">1002</span>	xiaohong	<span class="hljs-number">1</span><br><span class="hljs-number">1003</span>	xiaozhang	<span class="hljs-number">2</span><br><span class="hljs-number">1004</span>	PK	<span class="hljs-number">666</span><br><span class="hljs-type">Time</span> taken: <span class="hljs-number">0.361</span> seconds, Fetched: <span class="hljs-number">4</span> <span class="hljs-type">row</span>(s)<br><br>hive (<span class="hljs-keyword">default</span>)<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> teacher;<br>OK<br>teacher.id	teacher.name	teacher.type<br><span class="hljs-number">1</span>	zhanglaoshi	math<br><span class="hljs-number">2</span>	lilaoshi	english<br><span class="hljs-number">7</span>	Tony	CS<br><span class="hljs-type">Time</span> taken: <span class="hljs-number">0.331</span> seconds, Fetched: <span class="hljs-number">3</span> <span class="hljs-type">row</span>(s)<br></code></pre></td></tr></table></figure>
+
+<p>全连接示例👇</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql">hive (<span class="hljs-keyword">default</span>)<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> s.id <span class="hljs-keyword">as</span> s_id, s.name <span class="hljs-keyword">as</span> s_name, s.tech_id <span class="hljs-keyword">as</span> t_id,<br>              <span class="hljs-operator">&gt;</span> t.name <span class="hljs-keyword">as</span> t_name, t.type <span class="hljs-keyword">as</span> t_type<br>              <span class="hljs-operator">&gt;</span> <span class="hljs-keyword">from</span> student s<br>              <span class="hljs-operator">&gt;</span> <span class="hljs-keyword">full</span> <span class="hljs-keyword">join</span> teacher t <br>              <span class="hljs-operator">&gt;</span> <span class="hljs-keyword">on</span> s.tech_id <span class="hljs-operator">=</span> t.id;<br>              <br>s_id	s_name	t_id	t_name	t_type<br><span class="hljs-number">1002</span>	xiaohong	<span class="hljs-number">1</span>	zhanglaoshi	math<br><span class="hljs-number">1001</span>	xiaoming	<span class="hljs-number">1</span>	zhanglaoshi	math<br><span class="hljs-number">1003</span>	xiaozhang	<span class="hljs-number">2</span>	lilaoshi	english<br><span class="hljs-keyword">NULL</span>	<span class="hljs-keyword">NULL</span>	<span class="hljs-keyword">NULL</span>	Tony	CS<br><span class="hljs-number">1004</span>	PK	<span class="hljs-number">666</span>	<span class="hljs-keyword">NULL</span>	<span class="hljs-keyword">NULL</span><br><span class="hljs-type">Time</span> taken: <span class="hljs-number">58.246</span> seconds, Fetched: <span class="hljs-number">5</span> <span class="hljs-type">row</span>(s)<br></code></pre></td></tr></table></figure>
+
+<h2 id="LEFT-JOIN-EXCLUDING-INNER-JOIN"><a href="#LEFT-JOIN-EXCLUDING-INNER-JOIN" class="headerlink" title="LEFT JOIN EXCLUDING INNER JOIN"></a>LEFT JOIN EXCLUDING INNER JOIN</h2><p><img src="/2021/07/25/SQL-join/image-20210725152709911.png" alt="image-20210725152709911"></p>
+<p>LEFT JOIN EXCLUDING INNER JOIN译为左内连接。在左连接（LEFT JOIN）的基础上来完成，返回左表有但右表没有关联数据的记录集，即<code>where 右表=NULL</code></p>
+<p>示例如下：</p>
+<p>MySQL版本👇</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> s.id <span class="hljs-keyword">as</span> s_id, s.name <span class="hljs-keyword">as</span> s_name, s.tech_id <span class="hljs-keyword">as</span> t_id,<br>    <span class="hljs-operator">-</span><span class="hljs-operator">&gt;</span> t.name <span class="hljs-keyword">as</span> t_name, t.type <span class="hljs-keyword">as</span> t_type<br>    <span class="hljs-operator">-</span><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">from</span> student s<br>    <span class="hljs-operator">-</span><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">left</span> <span class="hljs-keyword">join</span> teacher t<br>    <span class="hljs-operator">-</span><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">on</span> s.tech_id <span class="hljs-operator">=</span> t.id<br>    <span class="hljs-operator">-</span><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">where</span> t.id <span class="hljs-keyword">is</span> <span class="hljs-keyword">null</span>;<br><span class="hljs-operator">+</span><span class="hljs-comment">------+--------+------+--------+--------+</span><br><span class="hljs-operator">|</span> s_id <span class="hljs-operator">|</span> s_name <span class="hljs-operator">|</span> t_id <span class="hljs-operator">|</span> t_name <span class="hljs-operator">|</span> t_type <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+--------+------+--------+--------+</span><br><span class="hljs-operator">|</span> <span class="hljs-number">1004</span> <span class="hljs-operator">|</span> PK     <span class="hljs-operator">|</span>  <span class="hljs-number">666</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>   <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>   <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+--------+------+--------+--------+</span><br><span class="hljs-number">1</span> <span class="hljs-type">row</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span> (<span class="hljs-number">0.13</span> sec)<br></code></pre></td></tr></table></figure>
+
+<p>Hive版本与MySQL版本一模一样。</p>
+<h2 id="RIGHT-JOIN-EXCLUDING-INNER-JOIN"><a href="#RIGHT-JOIN-EXCLUDING-INNER-JOIN" class="headerlink" title="RIGHT JOIN EXCLUDING INNER JOIN"></a>RIGHT JOIN EXCLUDING INNER JOIN</h2><p><img src="/2021/07/25/SQL-join/image-20210725153656052.png" alt="image-20210725153656052"></p>
+<p>RIGHT JOIN EXCLUDING INNER JOIN译为右内连接。在右连接（RIGHT JOIN）的基础上完成，返回右表有但左表没有关联的记录，即<code>where 左表=NULL</code></p>
+<p>示例如下：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql">mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> s.id <span class="hljs-keyword">as</span> s_id, s.name <span class="hljs-keyword">as</span> s_name, s.tech_id <span class="hljs-keyword">as</span> t_id,<br>    <span class="hljs-operator">-</span><span class="hljs-operator">&gt;</span> t.name <span class="hljs-keyword">as</span> t_name, t.type <span class="hljs-keyword">as</span> t_type<br>    <span class="hljs-operator">-</span><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">from</span> student s<br>    <span class="hljs-operator">-</span><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">right</span> <span class="hljs-keyword">join</span> teacher t<br>    <span class="hljs-operator">-</span><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">on</span> s.tech_id <span class="hljs-operator">=</span> t.id<br>    <span class="hljs-operator">-</span><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">where</span> s.tech_id <span class="hljs-keyword">is</span> <span class="hljs-keyword">null</span>;<br><span class="hljs-operator">+</span><span class="hljs-comment">------+--------+------+--------+--------+</span><br><span class="hljs-operator">|</span> s_id <span class="hljs-operator">|</span> s_name <span class="hljs-operator">|</span> t_id <span class="hljs-operator">|</span> t_name <span class="hljs-operator">|</span> t_type <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+--------+------+--------+--------+</span><br><span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span>   <span class="hljs-operator">|</span> <span class="hljs-keyword">NULL</span> <span class="hljs-operator">|</span> Tony   <span class="hljs-operator">|</span> CS     <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+--------+------+--------+--------+</span><br><span class="hljs-number">1</span> <span class="hljs-type">row</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span> (<span class="hljs-number">0.00</span> sec)<br></code></pre></td></tr></table></figure>
+
+<h2 id="FULL-OUTER-JOIN-EXCLUDING-INNER-JOIN"><a href="#FULL-OUTER-JOIN-EXCLUDING-INNER-JOIN" class="headerlink" title="FULL OUTER JOIN EXCLUDING INNER JOIN"></a>FULL OUTER JOIN EXCLUDING INNER JOIN</h2><p><img src="/2021/07/25/SQL-join/image-20210725153906332.png" alt="image-20210725153906332"></p>
+<p>返回左表和右表里没有相互关联的记录集。</p>
+<p>由于MySQL版本不支持，故用Hive来演示👇</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql">hive (<span class="hljs-keyword">default</span>)<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> s.id <span class="hljs-keyword">as</span> s_id, s.name <span class="hljs-keyword">as</span> s_name, s.tech_id <span class="hljs-keyword">as</span> t_id,<br>              <span class="hljs-operator">&gt;</span> t.name <span class="hljs-keyword">as</span> t_name, t.type <span class="hljs-keyword">as</span> t_type<br>              <span class="hljs-operator">&gt;</span> <span class="hljs-keyword">from</span> student s<br>              <span class="hljs-operator">&gt;</span> <span class="hljs-keyword">full</span> <span class="hljs-keyword">join</span> teacher t <br>              <span class="hljs-operator">&gt;</span> <span class="hljs-keyword">on</span> s.tech_id <span class="hljs-operator">=</span> t.id<br>              <span class="hljs-operator">&gt;</span> <span class="hljs-keyword">where</span> t.id <span class="hljs-keyword">is</span> <span class="hljs-keyword">null</span><br>              <span class="hljs-operator">&gt;</span> <span class="hljs-keyword">or</span> s.tech_id <span class="hljs-keyword">is</span> <span class="hljs-keyword">null</span>;<br>              <br>s_id	s_name	t_id	t_name	t_type<br><span class="hljs-keyword">NULL</span>	<span class="hljs-keyword">NULL</span>	<span class="hljs-keyword">NULL</span>	Tony	CS<br><span class="hljs-number">1004</span>	PK	<span class="hljs-number">666</span>	<span class="hljs-keyword">NULL</span>	<span class="hljs-keyword">NULL</span><br><span class="hljs-type">Time</span> taken: <span class="hljs-number">104.929</span> seconds, Fetched: <span class="hljs-number">2</span> <span class="hljs-type">row</span>(s)<br></code></pre></td></tr></table></figure>
+
+<h2 id="多表连接查询"><a href="#多表连接查询" class="headerlink" title="多表连接查询"></a>多表连接查询</h2><p>连接 n 个表，至少需要 n-1 个连接条件。例如：连接三个表，至少需要两个连接条件。</p>
+<p>三张表如下所示：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql">hive (<span class="hljs-keyword">default</span>)<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> emp;<br>OK<br>emp.empno	emp.ename	emp.job	emp.mgr	emp.hiredate	emp.sal	emp.comm	emp.deptno<br><span class="hljs-number">7369</span>		SMITH		CLERK	<span class="hljs-number">7902</span>	<span class="hljs-number">1980</span><span class="hljs-number">-12</span><span class="hljs-number">-17</span>		<span class="hljs-number">800.0</span>	<span class="hljs-keyword">NULL</span>		<span class="hljs-number">20</span><br><span class="hljs-number">7499</span>		ALLEN		SALESMAN7698	<span class="hljs-number">1981</span><span class="hljs-number">-2</span><span class="hljs-number">-20</span>		<span class="hljs-number">1600.0</span>	<span class="hljs-number">300.0</span>		<span class="hljs-number">30</span><br><span class="hljs-number">7521</span>		WARD		SALESMAN7698	<span class="hljs-number">1981</span><span class="hljs-number">-2</span><span class="hljs-number">-22</span>		<span class="hljs-number">1250.0</span>	<span class="hljs-number">500.0</span>		<span class="hljs-number">30</span><br><span class="hljs-number">7566</span>		JONES		MANAGER	<span class="hljs-number">7839</span>	<span class="hljs-number">1981</span><span class="hljs-number">-4</span><span class="hljs-number">-2</span>		<span class="hljs-number">2975.0</span>	<span class="hljs-keyword">NULL</span>		<span class="hljs-number">20</span><br><span class="hljs-number">7654</span>		MARTIN		SALESMAN7698	<span class="hljs-number">1981</span><span class="hljs-number">-9</span><span class="hljs-number">-28</span>		<span class="hljs-number">1250.0</span>	<span class="hljs-number">1400.0</span>		<span class="hljs-number">30</span><br><span class="hljs-number">7698</span>		BLAKE		MANAGER	<span class="hljs-number">7839</span>	<span class="hljs-number">1981</span><span class="hljs-number">-5</span><span class="hljs-number">-1</span>		<span class="hljs-number">2850.0</span>	<span class="hljs-keyword">NULL</span>		<span class="hljs-number">30</span><br><span class="hljs-number">7782</span>		CLARK		MANAGER	<span class="hljs-number">7839</span>	<span class="hljs-number">1981</span><span class="hljs-number">-6</span><span class="hljs-number">-9</span>		<span class="hljs-number">2450.0</span>	<span class="hljs-keyword">NULL</span>		<span class="hljs-number">10</span><br><span class="hljs-number">7788</span>		SCOTT		ANALYST	<span class="hljs-number">7566</span>	<span class="hljs-number">1987</span><span class="hljs-number">-4</span><span class="hljs-number">-19</span>		<span class="hljs-number">3000.0</span>	<span class="hljs-keyword">NULL</span>		<span class="hljs-number">20</span><br><span class="hljs-number">7839</span>		KING		PRESIDENTNULL	<span class="hljs-number">1981</span><span class="hljs-number">-11</span><span class="hljs-number">-17</span>		<span class="hljs-number">5000.0</span>	<span class="hljs-keyword">NULL</span>		<span class="hljs-number">10</span><br><span class="hljs-number">7844</span>		TURNER		SALESMAN7698	<span class="hljs-number">1981</span><span class="hljs-number">-9</span><span class="hljs-number">-8</span>		<span class="hljs-number">1500.0</span>	<span class="hljs-number">0.0</span>			<span class="hljs-number">30</span><br><span class="hljs-number">7876</span>		ADAMS		CLERK	<span class="hljs-number">7788</span>	<span class="hljs-number">1987</span><span class="hljs-number">-5</span><span class="hljs-number">-23</span>		<span class="hljs-number">1100.0</span>	<span class="hljs-keyword">NULL</span>		<span class="hljs-number">20</span><br><span class="hljs-number">7900</span>		JAMES		CLERK	<span class="hljs-number">7698</span>	<span class="hljs-number">1981</span><span class="hljs-number">-12</span><span class="hljs-number">-3</span>		<span class="hljs-number">950.0</span>	<span class="hljs-number">30.0</span>		<span class="hljs-keyword">NULL</span><br><span class="hljs-number">7902</span>		FORD		ANALYST	<span class="hljs-number">7566</span>	<span class="hljs-number">1981</span><span class="hljs-number">-12</span><span class="hljs-number">-3</span>		<span class="hljs-number">3000.0</span>	<span class="hljs-keyword">NULL</span>		<span class="hljs-number">20</span><br><span class="hljs-number">7934</span>		MILLER		CLERK	<span class="hljs-number">7782</span>	<span class="hljs-number">1982</span><span class="hljs-number">-1</span><span class="hljs-number">-23</span>		<span class="hljs-number">1300.0</span>	<span class="hljs-keyword">NULL</span>		<span class="hljs-number">10</span><br><span class="hljs-type">Time</span> taken: <span class="hljs-number">0.483</span> seconds, Fetched: <span class="hljs-number">14</span> <span class="hljs-type">row</span>(s)<br><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><br>hive (<span class="hljs-keyword">default</span>)<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> dept;<br>OK<br>dept.deptno	dept.dname	dept.loc<br><span class="hljs-number">10</span>			ACCOUNTING	<span class="hljs-number">1700</span><br><span class="hljs-number">20</span>			RESEARCH	<span class="hljs-number">1800</span><br><span class="hljs-number">30</span>			SALES		<span class="hljs-number">1900</span><br><span class="hljs-number">40</span>			OPERATIONS	<span class="hljs-number">1700</span><br><span class="hljs-type">Time</span> taken: <span class="hljs-number">0.693</span> seconds, Fetched: <span class="hljs-number">4</span> <span class="hljs-type">row</span>(s)<br><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><span class="hljs-operator">=</span><br>hive (<span class="hljs-keyword">default</span>)<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> location;<br>OK<br>location.loc	location.loc_name<br><span class="hljs-number">1700</span>			Beijing<br><span class="hljs-number">1800</span>			London<br><span class="hljs-number">1900</span>			Tokyo<br><span class="hljs-type">Time</span> taken: <span class="hljs-number">0.273</span> seconds, Fetched: <span class="hljs-number">3</span> <span class="hljs-type">row</span>(s)<br></code></pre></td></tr></table></figure>
+
+<p>多表连接查询示例如下：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql">hive (<span class="hljs-keyword">default</span>)<span class="hljs-operator">&gt;</span> <span class="hljs-operator">&gt;</span><span class="hljs-keyword">SELECT</span> e.ename, d.dname, l.loc_name<br>              <span class="hljs-operator">&gt;</span> <span class="hljs-keyword">FROM</span> emp e <br>              <span class="hljs-operator">&gt;</span> <span class="hljs-keyword">JOIN</span> dept d<br>              <span class="hljs-operator">&gt;</span> <span class="hljs-keyword">ON</span> d.deptno <span class="hljs-operator">=</span> e.deptno <br>              <span class="hljs-operator">&gt;</span> <span class="hljs-keyword">JOIN</span> location l<br>              <span class="hljs-operator">&gt;</span> <span class="hljs-keyword">ON</span> d.loc <span class="hljs-operator">=</span> l.loc;<br>OK<br>e.ename	d.dname		l.loc_name<br>SMITH	RESEARCH	London<br>ALLEN	SALES		Tokyo<br>WARD	SALES		Tokyo<br>JONES	RESEARCH	London<br>MARTIN	SALES		Tokyo<br>BLAKE	SALES		Tokyo<br>CLARK	ACCOUNTING	Beijing<br>SCOTT	RESEARCH	London<br>KING	ACCOUNTING	Beijing<br>TURNER	SALES		Tokyo<br>ADAMS	RESEARCH	London<br>FORD	RESEARCH	London<br>MILLER	ACCOUNTING	Beijing<br><span class="hljs-type">Time</span> taken: <span class="hljs-number">43.883</span> seconds, Fetched: <span class="hljs-number">13</span> <span class="hljs-type">row</span>(s)<br></code></pre></td></tr></table></figure>
+
+<p>大多数情况下，Hive 会对每对 JOIN 连接对象启动一个 MapReduce 任务。本例中会首先启动一个 MapReduce job 对表 e 和表 d 进行连接操作，然后会再启动一个 MapReduce job 将第一个 MapReduce job 的输出和表 l;进行连接操作。</p>
+<p>优化：当对 3 个或者更多表进行 join 连接时，如果每个 on 子句都使用相同的连接键的话，那么只会产生一个 MapReduce job。 </p>
+
+    </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
+
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+
+    
+    <a href="/2021/07/24/%E6%9F%A5%E8%AF%A2/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>查询</p>
+        </div>
+    </a>
+    
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By Liar
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/newliar">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
+    </span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+	</body>
+
+</html>
