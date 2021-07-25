@@ -312,7 +312,23 @@
 <figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> emp <span class="hljs-keyword">where</span> ename <span class="hljs-keyword">LIKE</span> <span class="hljs-string">&#x27;A%&#x27;</span>; #查找名字以 A 开头的员工信息<br><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> emp <span class="hljs-keyword">where</span> ename <span class="hljs-keyword">LIKE</span> <span class="hljs-string">&#x27;_A%&#x27;</span>; #查找名字中第二个字母为 A 的员工信息<br><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> emp <span class="hljs-keyword">where</span> ename RLIKE <span class="hljs-string">&#x27;[A]&#x27;</span>; #查找名字中带有 A 的员工信息<br><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> emp <span class="hljs-keyword">where</span> ename <span class="hljs-keyword">LIKE</span> <span class="hljs-string">&#x27;%A%&#x27;</span>; #同上<br></code></pre></td></tr></table></figure>
 
 <p><strong>逻辑运算符（And/Or/Not）</strong></p>
-<figure class="highlight ada"><table><tr><td class="code"><pre><code class="hljs ada"><span class="hljs-keyword">select</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> emp <span class="hljs-keyword">where</span> ... <span class="hljs-keyword">and</span><span class="hljs-operator">|</span><span class="hljs-keyword">or</span><span class="hljs-operator">|</span><span class="hljs-keyword">not</span> ...<br></code></pre></td></tr></table></figure>
+
+<h2 id="分组"><a href="#分组" class="headerlink" title="分组"></a>分组</h2><p><strong>group by语句</strong></p>
+<p>GROUP BY 语句通常会和聚合函数一起使用，按照一个或者多个列队结果进行分组，然后对每个组执行聚合操作。</p>
+<ol>
+<li>where 后面不能写分组函数，而 having 后面可以使用分组函数</li>
+<li>having 只用于 group by 分组统计语句</li>
+</ol>
+<blockquote>
+<p>求每个部门的平均工资</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> deptno, <span class="hljs-built_in">avg</span>(sal) <span class="hljs-keyword">from</span> emp <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> deptno;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>求每个部门的平均薪水大于 2000 的部门</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> deptno, <span class="hljs-built_in">avg</span>(sal) avg_sal <span class="hljs-keyword">from</span> emp <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> deptno <span class="hljs-keyword">having</span> avg_sal <span class="hljs-operator">&gt;</span> <span class="hljs-number">2000</span>;<br></code></pre></td></tr></table></figure>
 
 
     </div>
