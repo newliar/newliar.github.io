@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		
+<title>JVM-Welcome</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/blog.svg">
+
+
+<meta name="keywords" content="Java,Java虚拟机,GC,">
+<meta name="description" content="Java虚拟机入门框架">
+
+
+<script src="/js/jquery.min.js"></script>
+
+
+
+<!-- Baidu Analytics -->
+<script defer>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?4b5fe1472f22fa";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+	<meta name="generator" content="Hexo 5.4.0"></head>
+
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
+
+
+<link rel="stylesheet" href="/css/page_cente.css">
+
+
+<link rel="stylesheet" href="/css/atom-one-dark.css">
+
+
+<link rel="stylesheet" href="/css/header.css">
+
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/robot.svg" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										主页
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										归档
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										种类
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										标签
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										友情链接
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										关于
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>Liar</h2>
+    </div>
+    <ul>
+        
+        <li>
+            <a href="/">主页</a>
+        </li>
+        
+        <li>
+            <a href="/archives">归档</a>
+        </li>
+        
+        <li>
+            <a href="/categories">种类</a>
+        </li>
+        
+        <li>
+            <a href="/tags">标签</a>
+        </li>
+        
+        <li>
+            <a href="/links">友情链接</a>
+        </li>
+        
+        <li>
+            <a href="/about">关于</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/newliar">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
+</div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
+
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
+
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
+
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
+
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
+
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/Java">Java</a></li>
+            
+            <li><a href="/tags/Java虚拟机">Java虚拟机</a></li>
+            
+            <li><a href="/tags/GC">GC</a></li>
+            
+            
+        </ul>
+        <h1>JVM</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">Liar</a></span>
+                <p>2021-08-05 15:41:31</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <h1 id="JVM入门"><a href="#JVM入门" class="headerlink" title="JVM入门"></a>JVM入门</h1><h2 id="1-JVM的位置"><a href="#1-JVM的位置" class="headerlink" title="1.JVM的位置"></a>1.JVM的位置</h2><p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210805154206747.png" alt="image-20210805154206747"></p>
+<h2 id="2-JVM的体系架构"><a href="#2-JVM的体系架构" class="headerlink" title="2.JVM的体系架构"></a>2.JVM的体系架构</h2><p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210805154218772.png" alt="image-20210805154218772"></p>
+<blockquote>
+<p>Java栈，本地方法栈和程序计数器不会存在垃圾回收机制</p>
+</blockquote>
+<p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210805154226413.png" alt="image-20210805154226413"></p>
+<blockquote>
+<p>JVM调优基本在方法区和堆里调优</p>
+</blockquote>
+<p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210805154235685.png" alt="image-20210805154235685"></p>
+<h2 id="3-类加载器-Class-Loader"><a href="#3-类加载器-Class-Loader" class="headerlink" title="3.类加载器    Class Loader"></a>3.类加载器    Class Loader</h2><p>作用：加载class文件</p>
+<p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210805160213161.png" alt="image-20210805160213161"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Car</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        Car car1 = <span class="hljs-keyword">new</span> Car();<br>        Car car2 = <span class="hljs-keyword">new</span> Car();<br>        Car car3 = <span class="hljs-keyword">new</span> Car();<br><br>        System.out.println(car1.hashCode());<br>        System.out.println(car2.hashCode());<br>        System.out.println(car3.hashCode());<br><br>        Class&lt;? extends Car&gt; aClass1 = car1.getClass();<br>        Class&lt;? extends Car&gt; aClass2 = car1.getClass();<br>        Class&lt;? extends Car&gt; aClass3 = car1.getClass();<br><br>        System.out.println(aClass1.hashCode());<br>        System.out.println(aClass2.hashCode());<br>        System.out.println(aClass3.hashCode());<br><br>        System.out.println(aClass1.getClassLoader());<br><br>    &#125;<br>&#125;<br><br><br>Out：<br>对象的内存地址不一样<br><span class="hljs-number">460141958</span><br><span class="hljs-number">1163157884</span><br><span class="hljs-number">1956725890</span><br>类的内存地址相同<br><span class="hljs-number">685325104</span><br><span class="hljs-number">685325104</span><br><span class="hljs-number">685325104</span><br>sun.misc.Launcher$AppClassLoader@18b4aac2<br></code></pre></td></tr></table></figure>
+
+<p>从输出结果可以看出，在实例化对象时，每个对象的内存地址不同，而他们的模板类是同一个，且栈中存放对象的引用地址，对象的具体数据存放在堆中。</p>
+<p>类加载器的种类：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java">ClassLoader classLoader = aClass1.getClassLoader();<br>System.out.println(classLoader);<span class="hljs-comment">//AppClassLoader</span><br>System.out.println(classLoader.getParent());<span class="hljs-comment">//ExtClassLoader</span><br>System.out.println(classLoader.getParent().getParent());<span class="hljs-comment">//null</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210805160911193.png" alt="image-20210805160911193"></p>
+<h2 id="4-双亲委派机制"><a href="#4-双亲委派机制" class="headerlink" title="4.双亲委派机制"></a>4.双亲委派机制</h2><p>双亲委派机制的存在是为了java程序安全</p>
+<p>java中通常有三个类加载器：AppClassLoader–&gt;ExtClassLoader–&gt;BootClassLoader</p>
+<ol>
+<li>类加载器收到类加载请求</li>
+<li>将这个请求向上委托给父类加载器去完成，一直向上委托，直到启动类加载器</li>
+<li>启动加载器检查是否能够加载当前这个类，能加载就结束，使用当前的加载器，否则抛出异常，通知子类加载器加载</li>
+<li>重复步骤三</li>
+</ol>
+<h2 id="5-沙箱安全机制"><a href="#5-沙箱安全机制" class="headerlink" title="5.沙箱安全机制"></a>5.沙箱安全机制</h2><h2 id="6-Native"><a href="#6-Native" class="headerlink" title="6.Native"></a>6.Native</h2><p>本地方法使用<code>native</code>关键字，说明此方法是java作用范围外的功能，需要调用底层C语言的库来实现。</p>
+<p>使用本地方法后，会进入本地方法栈，本地方法调用本地方法接口<code>JNI</code>来调用底层方法</p>
+<p>如线程启动，<code>start()</code>方法会调用本地方法<code>native start0()</code>方法</p>
+<p><code>JNI(Java Native Interface)</code>的作用：扩展Java的使用，融合不同的编程语言。如C、C++、Python</p>
+<h2 id="7-PC寄存器"><a href="#7-PC寄存器" class="headerlink" title="7.PC寄存器"></a>7.PC寄存器</h2><p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210806141146708.png" alt="image-20210806141146708"></p>
+<h2 id="8-方法区"><a href="#8-方法区" class="headerlink" title="8.方法区"></a>8.方法区</h2><p>方法区是被所有线程共享的空间，所有字段和方法字节码，以及一些特殊方法，如构造函数，接口代码也在此定义。所有定义的方法的信息都存在方法区。</p>
+<p>静态变量（static）,常量，类信息（构造方法、接口定义），运行时的常量池存在方法区中，但是实例变量存在堆中。</p>
+<p>static    final    Class（类模板信息）    常量池    都存在方法区</p>
+<h2 id="9-栈"><a href="#9-栈" class="headerlink" title="9.栈"></a>9.栈</h2><p>程序执行时，先把<code>main()</code>方法压入方法栈，因此可以解释<code>main()</code>方法最先执行最后结束</p>
+<p><code>stackOverflowError</code>就是方法栈溢出，常见例子就是递归终止条件不对导致无限压栈最终栈溢出</p>
+<p>线程结束，栈内存也就释放，对于栈内存来说，<strong>不存在垃圾回收问题</strong></p>
+<p>栈内存存放的内容：<strong>8大基本数据类型</strong>（int    short    long    float    double    byte    char    boolean）+<strong>对象引用</strong>+<strong>实例化的方法</strong></p>
+<p>程序正在执行的方法，一定在方法栈的<strong>顶部</strong></p>
+<h2 id="10-三种JVM"><a href="#10-三种JVM" class="headerlink" title="10.三种JVM"></a>10.三种JVM</h2><p>Sun公司HotSpot<code>Java HotSpot(TM) 64-Bit Server VM (build 25.221-b11, mixed mode)</code></p>
+<p>BEA <code>JRockit</code></p>
+<p>IBM <code>J9 VM</code></p>
+<h2 id="11-堆"><a href="#11-堆" class="headerlink" title="11.堆"></a>11.堆</h2><p>Heap，一个JVM只有一个堆内存，且堆内存的大小可以调节。</p>
+<p>类加载器读取了类文件后，一般会把类的<strong>实例化信息、方法、常量、变量</strong>放入堆中，保存栈中引用类型的真实对象</p>
+<p>堆内存分为三个区域：</p>
+<ul>
+<li>新生区（伊甸园区    Eden Space）</li>
+<li>养老区</li>
+<li>永久区</li>
+</ul>
+<p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210806150843915.png"></p>
+<p>GC垃圾回收主要是在<strong>伊甸园区</strong>和<strong>养老区</strong> </p>
+<p>在JDK8以后，永久存储区改了个名字（元空间）</p>
+<h2 id="12-新生区、老年区"><a href="#12-新生区、老年区" class="headerlink" title="12.新生区、老年区"></a>12.新生区、老年区</h2><p><strong>新生区</strong></p>
+<ul>
+<li>类：诞生    成长甚至死亡的地方</li>
+<li>伊甸园，所有对象都是在伊甸园new出来的</li>
+<li>幸存区（0，1）</li>
+</ul>
+<p><strong>老年区</strong></p>
+<p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210806151843446.png" alt="image-20210806151843446"></p>
+<h2 id="13-永久区"><a href="#13-永久区" class="headerlink" title="13.永久区"></a>13.永久区</h2><p>这个区域是常驻内存的。用来存放JDK自身携带的Class对象。Interface元数据，存储的是Java运行时的一些环境或类信息。这个区域不存在垃圾回收，关闭JVM就会释放此处内存。</p>
+<ul>
+<li>在JDK1.6之前：叫永久代，常量池是在方法区</li>
+<li>jdk1.7：永久代，常量池在堆中</li>
+<li>jdk1.8：无永久代，常量池在元空间</li>
+</ul>
+<p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210806152902952.png" alt="堆内存图解"></p>
+<h2 id="14-堆内存调优"><a href="#14-堆内存调优" class="headerlink" title="14.堆内存调优"></a>14.堆内存调优</h2><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo02</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        <span class="hljs-comment">//返回虚拟机试图使用的最大内存</span><br>        <span class="hljs-keyword">long</span> max = Runtime.getRuntime().maxMemory();    <span class="hljs-comment">//字节</span><br><br>        <span class="hljs-comment">//返回jvm的总内存</span><br>        <span class="hljs-keyword">long</span> total = Runtime.getRuntime().totalMemory();<br><br>        System.out.println(<span class="hljs-string">&quot;max=&quot;</span> + max + <span class="hljs-string">&quot;字节\t&quot;</span> + (max / (<span class="hljs-keyword">double</span>) <span class="hljs-number">1024</span> / <span class="hljs-number">1024</span>)+<span class="hljs-string">&quot;MB&quot;</span>);<br>        System.out.println(<span class="hljs-string">&quot;total=&quot;</span> + total + <span class="hljs-string">&quot;字节\t&quot;</span> + (total / (<span class="hljs-keyword">double</span>) <span class="hljs-number">1024</span> / <span class="hljs-number">1024</span>)+<span class="hljs-string">&quot;MB&quot;</span>);<br><br>    &#125;<br><br>&#125;<br><br><br>Out：<br>    max=<span class="hljs-number">7618953216</span>字节	<span class="hljs-number">7266.</span>0MB	电脑总内存的<span class="hljs-number">1</span>/<span class="hljs-number">4</span><br>	total=<span class="hljs-number">514850816</span>字节	<span class="hljs-number">491.</span>0MB		电脑总内存的<span class="hljs-number">1</span>/<span class="hljs-number">64</span><br></code></pre></td></tr></table></figure>
+
+<p>默认情况下，分配的总内存是电脑总内存的1/4，初始化内存是电脑总内存的1/64</p>
+<p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210806154241114.png" alt="image-20210806154241114"></p>
+<p><code>-Xms</code>设置初始化内存分配大小</p>
+<p><code>-Xmx</code>设置最大分配内存</p>
+<p><code>PrintGCDetails</code>打印垃圾回收信息</p>
+<p><code>-Xms1024m -Xmx1024m -XX:+PrintGCDetails</code></p>
+<p>改变分配总内存和初始化内存，并打印GC详细信息</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">max=1029177344字节	981.5MB<br>total=1029177344字节	981.5MB<br>Heap<br> PSYoungGen      total 305664K, used 15729K [0x00000000eab00000, 0x0000000100000000, 0x0000000100000000)<br>  eden space 262144K, 6% used [0x00000000eab00000,0x00000000eba5c420,0x00000000fab00000)<br>  from space 43520K, 0% used [0x00000000fd580000,0x00000000fd580000,0x0000000100000000)<br>  to   space 43520K, 0% used [0x00000000fab00000,0x00000000fab00000,0x00000000fd580000)<br> ParOldGen       total 699392K, used 0K [0x00000000c0000000, 0x00000000eab00000, 0x00000000eab00000)<br>  object space 699392K, 0% used [0x00000000c0000000,0x00000000c0000000,0x00000000eab00000)<br> Metaspace       used 3125K, capacity 4496K, committed 4864K, reserved 1056768K<br>  class space    used 336K, capacity 388K, committed 512K, reserved 1048576K<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210806154609488.png" alt="image-20210806154609488"></p>
+<p>新生代+老年代的大小等于total堆内存的大小</p>
+<p>因此元空间逻辑上存在，物理上不存在 </p>
+<p><code>java.lang.OutOfMemoryError: Java heap space</code>堆内存溢出示例👇</p>
+<p>先将堆内存调小<code>-Xms1m -Xmx1m  -XX:+PrintGCDetails</code></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OOMError</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        String str = <span class="hljs-string">&quot;abcdefg&quot;</span>;<br><br>        <span class="hljs-keyword">while</span> (<span class="hljs-keyword">true</span>) &#123;<br>            str += <span class="hljs-keyword">new</span> Random().nextInt(<span class="hljs-number">888888888</span>)+<span class="hljs-keyword">new</span> Random().nextInt(<span class="hljs-number">99999999</span>);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210806155648260.png" alt="image-20210806155648260" style="zoom:200%;">
+
+<img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210806155832939.png" alt="image-20210806155832939" style="zoom:200%;">
+
+<p><strong>OOM故障排查</strong></p>
+<ul>
+<li>内存快照工具：Jprofiler、MAT（工具可以快速定位内存泄漏位置）</li>
+<li>Debug</li>
+</ul>
+<p><strong>Dump异常</strong></p>
+<p><code>HeapDumpOnOutOfMemoryError</code>当发生OOM错误时dump文件</p>
+<p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210806162544304.png" alt="image-20210806162544304"></p>
+<p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210806162750907.png" alt="image-20210806162750907"></p>
+<p>jProfiler详细信息</p>
+<p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210806162823170.png" alt="image-20210806162823170"></p>
+<h2 id="15-GC——垃圾回收"><a href="#15-GC——垃圾回收" class="headerlink" title="15.GC——垃圾回收"></a>15.GC——垃圾回收</h2><p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210806164024761.png" alt="image-20210806164024761"></p>
+<p>JVM在GC时，并不是对三个区域统一回收。大部分时候，回收都是新生代</p>
+<ul>
+<li>新生代</li>
+<li>幸存区</li>
+<li>老年区</li>
+</ul>
+<p>GC两种：轻GC，重GC</p>
+<p><strong>GC常见题目</strong></p>
+<p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210806164834825.png" alt="image-20210806164834825"></p>
+<p><strong>GC算法</strong></p>
+<p>引用计数法（用得少）</p>
+<p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210806165224705.png" alt="image-20210806165224705"></p>
+<p><strong>复制算法</strong></p>
+<p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210806171020246.png" alt="image-20210806171020246"></p>
+<p>每次GC都会将Eden区活的对象转移到幸存区：一旦Eden区被GC后，就会是空的。</p>
+<p>关于<strong>幸存区from</strong>和<strong>幸存区to</strong>，两个幸存区是一直在<strong>相互转移</strong>的，每次GC后，Eden区会将活着的对象转移到幸存区to中，同时幸存区from会将其中对象复制到幸存区to中，并将自身清空。此时幸存区to也就转换成了幸存区from，幸存区from同时转换成了幸存区to。（谁空谁是to）</p>
+<p>当一个对象经历了15次GC后都还没死，就会传入老年代（默认情况）</p>
+<p>通过<code>-XX:MaxTenuringThreshold=5</code>来改变进入老年代的时间。</p>
+<p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210806170941763.png" alt="image-20210806170941763"></p>
+<ul>
+<li>好处：没有内存碎片</li>
+<li>坏处：浪费了内存空间，多了一半永远是空to。如果对象都100%存活，复制算法开销极大</li>
+</ul>
+<p><strong>复制算法最佳使用场景：对象存活度较低的时候</strong>——<strong>新生区</strong></p>
+<p><strong>标记清除算法</strong></p>
+<p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210809150046621.png" alt="image-20210809150046621"></p>
+<ul>
+<li>优点：不需要额外空间</li>
+<li>缺点：两次扫描，严重浪费时间，会产生内存碎片。</li>
+</ul>
+<p>标记压缩算法</p>
+<p><img src="/2021/08/05/JVM%E5%85%A5%E9%97%A8/image-20210809150535856.png" alt="image-20210809150535856"></p>
+<p>对于标记清除的优化，防止内存碎片产生，但是多了一次移动成本</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>内存效率：复制算法&gt;标记清除算法&gt;标记压缩算法（时间复杂度）</li>
+<li>内存整齐度：复制算法=标记压缩算法&gt;标记清除算法</li>
+<li>内存利用率：标记压缩算法=标记清除算法&gt;复制算法 </li>
+</ul>
+<p>GC也叫<strong>分代收集算法</strong></p>
+<p>年轻代：存活率低 → 复制算法</p>
+<p>老年代：区域大，存活率高 → 标记清除 + 标记压缩 混合实现</p>
+<h3 id="16-JMM：Java-Memory-Model"><a href="#16-JMM：Java-Memory-Model" class="headerlink" title="16.JMM：Java Memory Model"></a>16.JMM：Java Memory Model</h3>
+    </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
+
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+
+    
+    <a href="/2021/08/05/%E5%8F%8D%E5%B0%84/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>反射</p>
+        </div>
+    </a>
+    
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By Liar
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/newliar">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
+    </span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+	</body>
+
+</html>
