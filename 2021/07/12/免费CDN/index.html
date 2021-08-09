@@ -307,6 +307,16 @@
 <p>或者不加版本号，直接引用最新资源</p>
 <figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">https:<span class="hljs-regexp">//</span>cdn.jsdelivr.net<span class="hljs-regexp">/gh/</span>newliar<span class="hljs-regexp">/CDN/</span>blog_img/helloWorld.jpg<br></code></pre></td></tr></table></figure>
 
+<p><strong>更新：</strong></p>
+<p>不加版本号可能会导致错误👇</p>
+<p><img src="/2021/07/12/%E5%85%8D%E8%B4%B9CDN/image-20210809161643552.png" alt="image-20210809161643552"></p>
+<p>解决方案：</p>
+<p>加最新版本号（需要重新发布再加上最新版本号）如👇：</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">https:<span class="hljs-regexp">//</span>cdn.jsdelivr.net<span class="hljs-regexp">/gh/</span>newliar<span class="hljs-regexp">/CDN@1.1/</span>blog_img/helloWorld.jpg<br></code></pre></td></tr></table></figure>
+
+<p>或者使用<code>main</code>分支代替版本号</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">https:<span class="hljs-regexp">//</span>cdn.jsdelivr.net<span class="hljs-regexp">/gh/</span>newliar<span class="hljs-regexp">/CDN@main/</span>blog_img/helloWorld.jpg<br></code></pre></td></tr></table></figure>
+
 
     </div>
 </div>
