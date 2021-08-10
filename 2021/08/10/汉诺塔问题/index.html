@@ -3,15 +3,15 @@
 
 	<head>
 		
-<title>HDFS集群扩容及缩容-Welcome</title>
+<title>汉诺塔问题-Welcome</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="shortcut icon" type="image/x-icon" href="/image/blog.svg">
 
 
-<meta name="keywords" content="Hadoop,HDFS,大数据,生产调优,">
-<meta name="description" content="HDFS集群扩容及缩容">
+<meta name="keywords" content="栈,递归,">
+<meta name="description" content="栈+递归解决汉诺塔问题">
 
 
 <script src="/js/jquery.min.js"></script>
@@ -258,17 +258,13 @@
         <ul class="tag">
             
             
-            <li><a href="/tags/Hadoop">Hadoop</a></li>
+            <li><a href="/tags/栈">栈</a></li>
             
-            <li><a href="/tags/HDFS">HDFS</a></li>
-            
-            <li><a href="/tags/大数据">大数据</a></li>
-            
-            <li><a href="/tags/生产调优">生产调优</a></li>
+            <li><a href="/tags/递归">递归</a></li>
             
             
         </ul>
-        <h1>HDFS集群扩容及缩容</h1>
+        <h1>汉诺塔问题</h1>
         <div class="article-info">
             <div class="article-author">
                 
@@ -281,65 +277,46 @@
                 </svg>
                 
                 <span> <a href="">Liar</a></span>
-                <p>2021-07-20 10:44:08</p>
+                <p>2021-08-10 10:34:06</p>
             </div>
         </div>
     </div>
 </div>
 <div class="article-content">
     <div id="article" class="content">
-        <h1 id="HDFS集群扩容及缩容"><a href="#HDFS集群扩容及缩容" class="headerlink" title="HDFS集群扩容及缩容"></a>HDFS集群扩容及缩容</h1><h2 id="1-添加白名单"><a href="#1-添加白名单" class="headerlink" title="1.添加白名单"></a>1.添加白名单</h2><blockquote>
-<p>白名单：表示在白名单的主机 IP 地址可以，用来存储数据。</p>
-<p>企业中：配置白名单，可以尽量防止黑客恶意访问攻击。</p>
-</blockquote>
-<p>配置白名单步骤如下👇：</p>
-<ol>
-<li><p>在NameNode节点的/opt/module/hadoop-3.1.3/etc/hadoop 目录下分别创建 <strong>whitelist</strong> 和<strong>blacklist</strong> 文件</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 hadoop]$ vim whitelist<br>[liar@hadoop102 hadoop]$ touch blacklist<br><br>[liar@hadoop102 hadoop]$ cat whitelist<br>hadoop102<br>hadoop103<br>hadoop104<br></code></pre></td></tr></table></figure></li>
-<li><p>在 <strong>hdfs-site.xml</strong> 配置文件中增加 <strong>dfs.hosts</strong> 配置参数</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!-- 白名单 --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.hosts<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>/opt/module/hadoop-3.1.3/etc/hadoop/whitelist<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br><span class="hljs-comment">&lt;!-- 黑名单 --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.hosts.exclude<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>/opt/module/hadoop-3.1.3/etc/hadoop/blacklist<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br></code></pre></td></tr></table></figure></li>
-<li><p>分发配置文件 <strong>whitelist</strong>，<strong>hdfs-site.xml</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 hadoop]$ xsync hdfs-site.xml whitelist <br></code></pre></td></tr></table></figure></li>
-<li><p><strong>第一次添加白名单必须重启集群</strong>，不是第一次，只需要刷新 NameNode 节点即可</p>
-</li>
-</ol>
-<h2 id="2-服役新服务器"><a href="#2-服役新服务器" class="headerlink" title="2.服役新服务器"></a>2.服役新服务器</h2><blockquote>
-<p>需求：随着公司业务的增长，数据量越来越大，原有的数据节点的容量已经不能满足存储数据的需求，需要在原有集群基础上动态添加新的数据节点。</p>
-</blockquote>
-<p>步骤如下👇：</p>
-<ol>
-<li><p>在 hadoop100 主机上再克隆一台 hadoop105 主机</p>
-</li>
-<li><p>修改 IP 地址和主机名称，并重启虚拟机</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[root@hadoop105 ~]# vim /etc/sysconfig/network-scripts/ifcfg-ens33<br>[root@hadoop105 ~]# vim /etc/hostname<br>[root@hadoop105 ~]# reboot<br></code></pre></td></tr></table></figure></li>
-<li><p>拷贝 hadoop102 的/opt/module 目录和/etc/profile.d/my_env.sh 到 hadoop105</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 opt]$ scp -r module/* root@hadoop105:/opt/module/<br>[liar@hadoop102 opt]$ sudo scp /etc/profile.d/my_env.sh root@hadoop105:/etc/profile.d/my_env.sh<br>[liar@hadoop105 hadoop-3.1.3]$ source /etc/profile<br></code></pre></td></tr></table></figure></li>
-<li><p>删除 hadoop105 上 Hadoop 的历史数据，data 和 log 数据</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop105 hadoop-3.1.3]$ rm -rf data/ logs/<br></code></pre></td></tr></table></figure></li>
-<li><p>配置 hadoop102 和 hadoop103 到 hadoop105 的 ssh 无密登录</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 .ssh]$ ssh-copy-id hadoop105<br>[liar@hadoop103 .ssh]$ ssh-copy-id hadoop105<br></code></pre></td></tr></table></figure></li>
-<li><p>直接启动 DataNode，即可关联到集群</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop105 hadoop-3.1.3]$ hdfs --daemon start datanode<br>[liar@hadoop105 hadoop-3.1.3]$ yarn --daemon start nodemanager<br></code></pre></td></tr></table></figure></li>
-<li><p>在白名单中增加新服役的服务器</p>
-<p>在whitelist中<strong>添加hadoop105</strong>，并<strong>重启集群</strong>。之后<strong>分发whitelis</strong>t并<strong>刷新NameNode</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">刷新NameNode</span><br>[liar@hadoop102 hadoop-3.1.3]$ hdfs dfsadmin -refreshNodes<br></code></pre></td></tr></table></figure>
+        <h1 id="汉诺塔问题"><a href="#汉诺塔问题" class="headerlink" title="汉诺塔问题"></a>汉诺塔问题</h1><p>如图所示：将A中的盘子移动到C上，转移过程中遵循一下原则👇</p>
+<ul>
+<li>一次只能移动一个盘子</li>
+<li>每次移动时需保证大的盘子始终在小的盘子下面</li>
+<li>盘子只能总顶端取出放到另一个盘子上面</li>
+</ul>
+<p><img src="/2021/08/10/%E6%B1%89%E8%AF%BA%E5%A1%94%E9%97%AE%E9%A2%98/image-20210810103957760.png" alt="image-20210810103957760"></p>
+<p>对于Hanoi问题，可以采用分治的方法来解决，我们先看两个盘子的情况，如下图👇</p>
+<p><img src="/2021/08/10/%E6%B1%89%E8%AF%BA%E5%A1%94%E9%97%AE%E9%A2%98/image-20210810104853906.png" alt="image-20210810104853906"></p>
+<p>先将红色的盘子从A移动到B</p>
+<p><img src="/2021/08/10/%E6%B1%89%E8%AF%BA%E5%A1%94%E9%97%AE%E9%A2%98/image-20210810104902482.png" alt="image-20210810104902482"></p>
+<p>再将蓝色盘子从A移动到C</p>
+<p><img src="/2021/08/10/%E6%B1%89%E8%AF%BA%E5%A1%94%E9%97%AE%E9%A2%98/image-20210810105108759.png" alt="image-20210810105108759"></p>
+<p>最后将红色的盘子从B移动到C</p>
+<p><img src="/2021/08/10/%E6%B1%89%E8%AF%BA%E5%A1%94%E9%97%AE%E9%A2%98/image-20210810105242654.png" alt="image-20210810105242654"></p>
+<p>最后完成移动</p>
+<p><img src="/2021/08/10/%E6%B1%89%E8%AF%BA%E5%A1%94%E9%97%AE%E9%A2%98/image-20210810105319810.png" alt="image-20210810105319810"></p>
+<p>因此当盘子数为3个时，我们可以使用相同的思路来完成对盘子的移动</p>
+<p><img src="/2021/08/10/%E6%B1%89%E8%AF%BA%E5%A1%94%E9%97%AE%E9%A2%98/image-20210810105517602.png" alt="image-20210810105517602"></p>
+<p>我们先不看下面蓝色的盘子，可以通过上面的变换将两个红色盘子移动到B，如下图所示：</p>
+<p><img src="/2021/08/10/%E6%B1%89%E8%AF%BA%E5%A1%94%E9%97%AE%E9%A2%98/image-20210810110210835.png" alt="image-20210810110210835"></p>
+<p>再将蓝色盘子移动到C，移动到C后我们再一次不看蓝色的盘子，再通过上面的变换将两个红色盘子移动到C</p>
+<p><img src="/2021/08/10/%E6%B1%89%E8%AF%BA%E5%A1%94%E9%97%AE%E9%A2%98/image-20210810110340475.png" alt="image-20210810110340475"></p>
+<p><img src="/2021/08/10/%E6%B1%89%E8%AF%BA%E5%A1%94%E9%97%AE%E9%A2%98/image-20210810110406293.png" alt="image-20210810110406293"></p>
+<p>通过盘子数分别使2和3我们发现，如盘子数等于4的时候，我们将上面三个盘子看成整体，将盘子数等于4的问题转换成盘子数等于3时候的问题。</p>
+<p>因此可以得出结论：<strong>不管盘子有多少个，我们只需考虑n-1时的状况</strong></p>
+<p>这种每次将问题只考虑下一步状态很自然的可以联想到用递归解决，由于汉诺塔每次只能总顶端移出，因此我们考虑用栈+递归解决该问题</p>
+<p>伪代码如下👇</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/*	n代表盘子数</span><br><span class="hljs-comment">*	A, B, C分别代表汉诺塔的三个柱子</span><br><span class="hljs-comment">*/</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Hanoi</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n, Stack A, Stack B, Stack C)</span> </span>&#123;<br>    <span class="hljs-comment">//递归终止条件</span><br>    <span class="hljs-comment">//当A上的盘子数为1时将A上的盘子移动到C</span><br>    <span class="hljs-keyword">if</span>(A.size() == <span class="hljs-number">1</span>) &#123;<br>        <span class="hljs-comment">//A出栈，C压栈</span><br>        C.push(A.peek());<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">//将A柱上的n-1个盘子绕过C移动B柱上</span><br>        Hanoi(n-<span class="hljs-number">1</span>, A, C, B);<br>        <span class="hljs-comment">//将A上最后一个盘子移动到C上</span><br>        C.push(A.peek());<br>        <span class="hljs-comment">//将B柱上的n-1个盘子绕过A移动到C上</span><br>        Hanoi(n-<span class="hljs-number">1</span>, B, A, C);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>之后即可看到hadoop105👇</p>
-<p><img src="/2021/07/20/HDFS%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%E5%8F%8A%E7%BC%A9%E5%AE%B9/image-20210720143238768.png" alt="image-20210720143238768"></p>
-</li>
-</ol>
-<h2 id="3-服务器间数据均衡"><a href="#3-服务器间数据均衡" class="headerlink" title="3.服务器间数据均衡"></a>3.服务器间数据均衡</h2><p><strong>开启数据均衡命令:</strong></p>
-<blockquote>
-<p>对于参数 10，代表的是集群中各个节点的磁盘空间利用率相差不超过 10%</p>
-</blockquote>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[atguigu@hadoop105 hadoop-3.1.3]$ sbin/start-balancer.sh -threshold 10<br></code></pre></td></tr></table></figure>
+<p>具体题目如LeetCode<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/hanota-lcci/">面试题 08.06. 汉诺塔问题</a></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">hanota</span><span class="hljs-params">(List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span> </span>&#123;<br>        <span class="hljs-keyword">int</span> n = A.size();<br>        move(n, A, B, C);<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">move</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n, List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (n == <span class="hljs-number">1</span>) &#123;<br>            C.add(<span class="hljs-number">0</span>, A.remove(<span class="hljs-number">0</span>));<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>        move(n-<span class="hljs-number">1</span>, A, C, B);<br>        C.add(<span class="hljs-number">0</span>, A.remove(<span class="hljs-number">0</span>));<br>        move(n-<span class="hljs-number">1</span>, B, A, C);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p><strong>停止数据均衡命令：</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[atguigu@hadoop105 hadoop-3.1.3]$ sbin/stop-balancer.sh<br></code></pre></td></tr></table></figure>
-
-<h2 id="4-黑名单退役服务器"><a href="#4-黑名单退役服务器" class="headerlink" title="4.黑名单退役服务器"></a>4.黑名单退役服务器</h2><p>编辑/opt/module/hadoop-3.1.3/etc/hadoop 目录下的 blacklist 文件，添加主机名称并分发配置文件</p>
-<p><strong>第一次添加黑名单必须重启集群，不是第一次，只需要刷新NameNode节点即可</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[atguigu@hadoop102 hadoop-3.1.3]$ hdfs dfsadmin -refreshNodes Refresh nodes successful<br></code></pre></td></tr></table></figure>
 
     </div>
 </div>
@@ -369,19 +346,12 @@
 </script>
 <div class="Last-Next">
     
-    <a href="/2021/07/24/Hive-DML%E6%93%8D%E4%BD%9C/">
-        <div class="last">
-            <span>上一篇</span>
-            <p>Hive DML操作</p>
-        </div>
-    </a>
-    
 
     
-    <a href="/2021/07/20/HDFS%E5%A4%9A%E7%9B%AE%E5%BD%95/">
+    <a href="/2021/08/05/JVM%E5%85%A5%E9%97%A8/">
         <div class="next">
             <span>下一篇</span>
-            <p>HDFS多目录</p>
+            <p>JVM</p>
         </div>
     </a>
     
