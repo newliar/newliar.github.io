@@ -3,15 +3,15 @@
 
 	<head>
 		
-<title>HDFS集群扩容及缩容-Welcome</title>
+<title>leetcode(53)最大子序和-Welcome</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="shortcut icon" type="image/x-icon" href="/image/blog.svg">
 
 
-<meta name="keywords" content="Hadoop,大数据,HDFS,生产调优,">
-<meta name="description" content="HDFS集群扩容及缩容">
+<meta name="keywords" content="leetcode,数组,动态规划,">
+<meta name="description" content="最大子序和——动态规划入门">
 
 
 <script src="/js/jquery.min.js"></script>
@@ -258,17 +258,15 @@
         <ul class="tag">
             
             
-            <li><a href="/tags/Hadoop">Hadoop</a></li>
+            <li><a href="/tags/leetcode">leetcode</a></li>
             
-            <li><a href="/tags/大数据">大数据</a></li>
+            <li><a href="/tags/数组">数组</a></li>
             
-            <li><a href="/tags/HDFS">HDFS</a></li>
-            
-            <li><a href="/tags/生产调优">生产调优</a></li>
+            <li><a href="/tags/动态规划">动态规划</a></li>
             
             
         </ul>
-        <h1>HDFS集群扩容及缩容</h1>
+        <h1>leetcode(53)最大子序和</h1>
         <div class="article-info">
             <div class="article-author">
                 
@@ -281,65 +279,30 @@
                 </svg>
                 
                 <span> <a href="">Liar</a></span>
-                <p>2021-07-20 10:44:08</p>
+                <p>2021-08-11 21:02:38</p>
             </div>
         </div>
     </div>
 </div>
 <div class="article-content">
     <div id="article" class="content">
-        <h1 id="HDFS集群扩容及缩容"><a href="#HDFS集群扩容及缩容" class="headerlink" title="HDFS集群扩容及缩容"></a>HDFS集群扩容及缩容</h1><h2 id="1-添加白名单"><a href="#1-添加白名单" class="headerlink" title="1.添加白名单"></a>1.添加白名单</h2><blockquote>
-<p>白名单：表示在白名单的主机 IP 地址可以，用来存储数据。</p>
-<p>企业中：配置白名单，可以尽量防止黑客恶意访问攻击。</p>
-</blockquote>
-<p>配置白名单步骤如下👇：</p>
-<ol>
-<li><p>在NameNode节点的/opt/module/hadoop-3.1.3/etc/hadoop 目录下分别创建 <strong>whitelist</strong> 和<strong>blacklist</strong> 文件</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 hadoop]$ vim whitelist<br>[liar@hadoop102 hadoop]$ touch blacklist<br><br>[liar@hadoop102 hadoop]$ cat whitelist<br>hadoop102<br>hadoop103<br>hadoop104<br></code></pre></td></tr></table></figure></li>
-<li><p>在 <strong>hdfs-site.xml</strong> 配置文件中增加 <strong>dfs.hosts</strong> 配置参数</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!-- 白名单 --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.hosts<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>/opt/module/hadoop-3.1.3/etc/hadoop/whitelist<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br><span class="hljs-comment">&lt;!-- 黑名单 --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>dfs.hosts.exclude<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>/opt/module/hadoop-3.1.3/etc/hadoop/blacklist<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br></code></pre></td></tr></table></figure></li>
-<li><p>分发配置文件 <strong>whitelist</strong>，<strong>hdfs-site.xml</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 hadoop]$ xsync hdfs-site.xml whitelist <br></code></pre></td></tr></table></figure></li>
-<li><p><strong>第一次添加白名单必须重启集群</strong>，不是第一次，只需要刷新 NameNode 节点即可</p>
-</li>
-</ol>
-<h2 id="2-服役新服务器"><a href="#2-服役新服务器" class="headerlink" title="2.服役新服务器"></a>2.服役新服务器</h2><blockquote>
-<p>需求：随着公司业务的增长，数据量越来越大，原有的数据节点的容量已经不能满足存储数据的需求，需要在原有集群基础上动态添加新的数据节点。</p>
-</blockquote>
-<p>步骤如下👇：</p>
-<ol>
-<li><p>在 hadoop100 主机上再克隆一台 hadoop105 主机</p>
-</li>
-<li><p>修改 IP 地址和主机名称，并重启虚拟机</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[root@hadoop105 ~]# vim /etc/sysconfig/network-scripts/ifcfg-ens33<br>[root@hadoop105 ~]# vim /etc/hostname<br>[root@hadoop105 ~]# reboot<br></code></pre></td></tr></table></figure></li>
-<li><p>拷贝 hadoop102 的/opt/module 目录和/etc/profile.d/my_env.sh 到 hadoop105</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 opt]$ scp -r module/* root@hadoop105:/opt/module/<br>[liar@hadoop102 opt]$ sudo scp /etc/profile.d/my_env.sh root@hadoop105:/etc/profile.d/my_env.sh<br>[liar@hadoop105 hadoop-3.1.3]$ source /etc/profile<br></code></pre></td></tr></table></figure></li>
-<li><p>删除 hadoop105 上 Hadoop 的历史数据，data 和 log 数据</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop105 hadoop-3.1.3]$ rm -rf data/ logs/<br></code></pre></td></tr></table></figure></li>
-<li><p>配置 hadoop102 和 hadoop103 到 hadoop105 的 ssh 无密登录</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop102 .ssh]$ ssh-copy-id hadoop105<br>[liar@hadoop103 .ssh]$ ssh-copy-id hadoop105<br></code></pre></td></tr></table></figure></li>
-<li><p>直接启动 DataNode，即可关联到集群</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[liar@hadoop105 hadoop-3.1.3]$ hdfs --daemon start datanode<br>[liar@hadoop105 hadoop-3.1.3]$ yarn --daemon start nodemanager<br></code></pre></td></tr></table></figure></li>
-<li><p>在白名单中增加新服役的服务器</p>
-<p>在whitelist中<strong>添加hadoop105</strong>，并<strong>重启集群</strong>。之后<strong>分发whitelis</strong>t并<strong>刷新NameNode</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">刷新NameNode</span><br>[liar@hadoop102 hadoop-3.1.3]$ hdfs dfsadmin -refreshNodes<br></code></pre></td></tr></table></figure>
-
-<p>之后即可看到hadoop105👇</p>
-<p><img src="/2021/07/20/HDFS%E9%9B%86%E7%BE%A4%E6%89%A9%E5%AE%B9%E5%8F%8A%E7%BC%A9%E5%AE%B9/image-20210720143238768.png" alt="image-20210720143238768"></p>
-</li>
-</ol>
-<h2 id="3-服务器间数据均衡"><a href="#3-服务器间数据均衡" class="headerlink" title="3.服务器间数据均衡"></a>3.服务器间数据均衡</h2><p><strong>开启数据均衡命令:</strong></p>
+        <h1 id="LeetCode-53-最大子序和"><a href="#LeetCode-53-最大子序和" class="headerlink" title="LeetCode(53)最大子序和"></a>LeetCode(53)最大子序和</h1><p>题目描述：</p>
 <blockquote>
-<p>对于参数 10，代表的是集群中各个节点的磁盘空间利用率相差不超过 10%</p>
+<p>给定一个整数数组 <code>nums</code> ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。</p>
+<p>示例：</p>
+<figure class="highlight subunit"><table><tr><td class="code"><pre><code class="hljs subunit">输入：nums = [<span class="hljs-string">-2</span>,1,<span class="hljs-string">-3</span>,4,<span class="hljs-string">-1</span>,2,1,<span class="hljs-string">-5</span>,4]<br>输出：6<br>解释：连续子数组 [4,<span class="hljs-string">-1</span>,2,1] 的和最大，为 6 。<br></code></pre></td></tr></table></figure>
 </blockquote>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[atguigu@hadoop105 hadoop-3.1.3]$ sbin/start-balancer.sh -threshold 10<br></code></pre></td></tr></table></figure>
+<p>求子串的问题一般都要用到循环遍历，在循环遍历时，通常有三种遍历方法，以数组<code>[2,1,-3,4,-1,2,1,-5,4]</code>为例</p>
+<ul>
+<li>直接遍历，也是暴力求解，即是从开头开始，每次求它的子串。例如<code>[2]、[2,1]、[2,1,-3]...[-3]、[-3，4]...</code></li>
+<li>第二种就是按照长度遍历，即从每个位置开始，第一次遍历长度为1的子串，第二次遍历长度为2的子串，以此类推。</li>
+<li>第三种就是以当前节点作为末尾时的情况来进行遍历，因为<strong>每个位置的字符都会有其作为末尾时候的子串</strong>，例如第一次遍历以下标0为末尾的子串，第一次遍历以下标1为末尾的子串…</li>
+</ul>
+<p>在本题中，我们使用第三种遍历方法，因为在求解子串和的时候，我们只需要比较<strong>当前数值</strong>与<strong>前一个子串加上当前数值的和</strong></p>
+<p>状态转移方程：<code>sum[i] = max&#123;sum[i]+num[i], num[i]&#125;</code></p>
+<p><code>sum[i]</code>记录了以<code>num[i]</code>为子串末尾最大连续子串和</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">maxSubArray</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] nums)</span> </span>&#123;<br>        <span class="hljs-keyword">int</span> length = nums.length;<br>        <span class="hljs-comment">//长度为一直接返回</span><br>        <span class="hljs-keyword">if</span> (length == <span class="hljs-number">1</span>) &#123;<br>            <span class="hljs-keyword">return</span> nums[<span class="hljs-number">0</span>];<br>        &#125;<br>        <span class="hljs-comment">//sum记录了以nums[i]为终点的子序列的最大子序列和</span><br>        <span class="hljs-keyword">int</span> sum = nums[<span class="hljs-number">0</span>];<br>        <span class="hljs-comment">//res记录了当前状态下的最大子序列和</span><br>        <span class="hljs-keyword">int</span> res = nums[<span class="hljs-number">0</span>];<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; length; i++) &#123;<br>            <span class="hljs-comment">//比较前一个子序列+num[i]的和与num[i]的大小关系，保留最大值</span><br>            <span class="hljs-comment">//如果sum对num[i]的值有增益效果，即可以理解为sum&gt;0时，才保留sum+num[i]的值，sum的值重置为子串仅为nums[i]的值</span><br>            <span class="hljs-comment">//注意谁对谁的增益关系，是sum作用于nums[i]</span><br>            sum = Math.max(sum+nums[i], nums[i]);<br>            <span class="hljs-comment">//保存最大值</span><br>            res = Math.max(sum, res);<br>        &#125;<br>        <span class="hljs-keyword">return</span> res;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p><strong>停止数据均衡命令：</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[atguigu@hadoop105 hadoop-3.1.3]$ sbin/stop-balancer.sh<br></code></pre></td></tr></table></figure>
-
-<h2 id="4-黑名单退役服务器"><a href="#4-黑名单退役服务器" class="headerlink" title="4.黑名单退役服务器"></a>4.黑名单退役服务器</h2><p>编辑/opt/module/hadoop-3.1.3/etc/hadoop 目录下的 blacklist 文件，添加主机名称并分发配置文件</p>
-<p><strong>第一次添加黑名单必须重启集群，不是第一次，只需要刷新NameNode节点即可</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[atguigu@hadoop102 hadoop-3.1.3]$ hdfs dfsadmin -refreshNodes Refresh nodes successful<br></code></pre></td></tr></table></figure>
 
     </div>
 </div>
@@ -369,19 +332,12 @@
 </script>
 <div class="Last-Next">
     
-    <a href="/2021/07/24/Hive-DML%E6%93%8D%E4%BD%9C/">
-        <div class="last">
-            <span>上一篇</span>
-            <p>Hive DML操作</p>
-        </div>
-    </a>
-    
 
     
-    <a href="/2021/07/20/HDFS%E5%A4%9A%E7%9B%AE%E5%BD%95/">
+    <a href="/2021/08/10/%E6%B1%89%E8%AF%BA%E5%A1%94%E9%97%AE%E9%A2%98/">
         <div class="next">
             <span>下一篇</span>
-            <p>HDFS多目录</p>
+            <p>汉诺塔问题</p>
         </div>
     </a>
     
